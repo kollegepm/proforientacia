@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Тижневі завдання</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Unbounded:wght@500;700&amp;display=swap">
+<style>
+/* Layout: week header + four counters across the top; a three-column board (заплановано → в роботі → виконано)
+   with the entry desk on the right; a per-person summary under the board. Same palette as the outreach dashboard. */
+:root {
+  --paper: #F2F5F4;
+  --panel: #FFFFFF;
+  --ink: #13222A;
+  --muted: #5A6A71;
+  --line: #D6DFDE;
+  --soft: #E8EEED;
+  --accent: #0F5E73;
+  --accent-ink: #FFFFFF;
+  --todo: #5A6A71;
+  --doing: #C2742A;
+  --done: #4C8738;
+  --bad: #AE4357;
+  --todo-bg: #ECF0EF;
+  --doing-bg: #FAEDDF;
+  --done-bg: #E6F0E1;
+  --bad-bg: #F7E2E6;
+  --f-display: 'Unbounded', 'IBM Plex Sans', system-ui, sans-serif;
+  --f-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D161A; --panel: #142128; --ink: #E4EDEF; --muted: #93A4AB; --line: #253740; --soft: #1B2B33;
+    --accent: #5AB2CA; --accent-ink: #0D161A; --todo: #93A4AB; --doing: #E09A52; --done: #7DBA65; --bad: #E27387;
+    --todo-bg: #1E2C33; --doing-bg: #3A2B1B; --done-bg: #1E3320; --bad-bg: #3E2028;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D161A; --panel: #142128; --ink: #E4EDEF; --muted: #93A4AB; --line: #253740; --soft: #1B2B33;
+  --accent: #5AB2CA; --accent-ink: #0D161A; --todo: #93A4AB; --doing: #E09A52; --done: #7DBA65; --bad: #E27387;
+  --todo-bg: #1E2C33; --doing-bg: #3A2B1B; --done-bg: #1E3320; --bad-bg: #3E2028;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+.titlerow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.tasklink { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); border-radius: 999px; padding: 5px 14px; background: var(--panel); white-space: nowrap; }
+.tasklink:hover { background: var(--accent); color: var(--accent-ink); }
+.authbox { display: inline-flex; align-items: center; gap: 8px; }
+.authwho { font-size: 12.5px; color: var(--muted); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; display: flex; flex-direction: column; gap: 20px; }
+
+.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; padding-block: 4px 8px; background: var(--paper); }
+.eyebrow { margin: 0 0 6px; font-family: var(--f-data); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(26px, 4vw, 38px); line-height: 1.1; letter-spacing: -.01em; text-wrap: balance; }
+.period-line { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+.period-line strong { color: var(--ink); font-weight: 600; }
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.weeknav { display: inline-flex; align-items: center; gap: 4px; }
+select, input, textarea { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; min-width: 0; }
+select:focus-visible, input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 6px; padding: 8px 14px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.icon { width: 36px; padding: 8px 0; text-align: center; font-size: 16px; line-height: 1; }
+.btn:disabled { opacity: .55; cursor: default; }
+.status { margin: 0; font-size: 13px; color: var(--muted); }
+.status:empty { display: none; }
+.demo { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 10px 14px; border: 1px dashed var(--doing); border-radius: 8px; background: var(--panel); font-size: 14px; }
+.demo strong { color: var(--doing); }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.kpi { background: var(--panel); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.key { width: 10px; height: 10px; border-radius: 2px; flex: none; background: var(--k); display: inline-block; }
+.kpi-num { font-family: var(--f-display); font-weight: 500; font-size: 32px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi-sub { font-size: 12.5px; color: var(--muted); min-height: 1.4em; }
+.progress { height: 6px; border-radius: 3px; background: var(--soft); overflow: hidden; margin-top: 4px; }
+.progress span { display: block; height: 100%; background: var(--done); width: 0; }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; grid-template-areas: "main entry"; gap: 20px; align-items: start; }
+.main { grid-area: main; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.entry { grid-area: entry; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 18px; min-width: 0; }
+.card h2 { margin: 0 0 2px; font-size: 16px; font-weight: 600; }
+.hint { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+
+/* Board */
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; background: var(--paper); }
+.col { background: var(--soft); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.colhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; }
+.colhead h2 { margin: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.colhead .cnt { font-family: var(--f-data); font-size: 13px; color: var(--muted); }
+.cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.colempty { font-size: 13px; color: var(--muted); padding: 10px 4px; text-align: center; }
+.task { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.task.overdue { border-color: var(--bad); }
+.task.done .t-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.t-title { font-weight: 600; font-size: 14.5px; line-height: 1.35; overflow-wrap: anywhere; }
+.t-note { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; margin-top: -4px; }
+.t-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 13px; }
+.who { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.ava { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; background: var(--a); flex: none; }
+.due { font-family: var(--f-data); font-size: 12.5px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; color: var(--muted); }
+.due.today { color: var(--doing); border-color: var(--doing); }
+.due.late { color: #fff; background: var(--bad); border-color: var(--bad); }
+.carry { font-size: 12px; color: var(--bad); }
+.t-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.mini { font: inherit; font-size: 12.5px; font-weight: 500; padding: 4px 9px; border-radius: 5px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.mini:hover { border-color: var(--accent); }
+.mini.go { border-color: var(--accent); color: var(--accent); }
+.mini.ghost { border-color: transparent; color: var(--muted); }
+.mini.ghost:hover { border-color: var(--line); }
+.mini[data-armed] { background: var(--bad); border-color: var(--bad); color: #fff; }
+
+/* Summary table */
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: right; font-weight: 500; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--soft); text-align: right; font-family: var(--f-data); font-size: 13px; font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--f-body); font-size: 14px; }
+td.zero { color: var(--muted); }
+td.lateN { color: var(--bad); font-weight: 600; }
+td.none { text-align: center; color: var(--muted); font-family: var(--f-body); padding: 18px 10px; }
+tr:last-child td { border-bottom: 0; }
+
+/* Entry */
+.entry .card { padding: 18px; }
+.entry h2 { font-size: 17px; margin-bottom: 12px; }
+.fields { display: flex; flex-direction: column; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; color: var(--muted); }
+.req { color: var(--bad); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.formfoot { display: flex; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.formmsg { font-size: 13px; color: var(--muted); }
+.formmsg.err { color: var(--bad); }
+.readonly { font-size: 14px; color: var(--muted); margin: 0; }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 8px; font-size: 14px; z-index: 30; }
+.overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: var(--paper); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); }
+
+body.pdf-mode .wrap { width: 980px; max-width: none; }
+body.pdf-mode .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+body.pdf-mode .entry { display: none; }
+body.pdf-mode .board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+body.pdf-mode .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* Month calendar */
+.cal-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 12px; margin-bottom: 12px; }
+.card h2.cal-title { font-family: var(--f-display); font-weight: 500; font-size: 22px; margin: 0; }
+.cal-sub { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.calwrap { overflow-x: auto; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; min-width: 660px; }
+.cal .dow { background: var(--soft); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 6px 8px; }
+.cal .dow.we { color: var(--bad); }
+.cd { background: var(--panel); min-height: 104px; padding: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cd.out { background: var(--paper); }
+.cd.out .cd-n { opacity: .45; }
+.cd.inweek { background: var(--soft); }
+.cd-n { font: inherit; font-family: var(--f-data); font-size: 12.5px; align-self: flex-start; padding: 1px 7px; border-radius: 999px; border: 0; background: none; color: var(--ink); cursor: pointer; }
+.cd-n:hover { background: var(--line); }
+.cd.today .cd-n { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.chip { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; font: inherit; font-size: 12px; line-height: 1.3; padding: 3px 7px; border-radius: 5px; border: 0; background: var(--cbg); color: var(--ink); cursor: pointer; min-width: 0; }
+.chip:hover { box-shadow: inset 0 0 0 1px var(--cdot); }
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cdot); flex: none; }
+.chip .ct { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
+.chip.done .ct { color: var(--muted); text-decoration: line-through; }
+.chip.late .ct { font-weight: 600; }
+.more { font: inherit; font-size: 12px; color: var(--muted); background: none; border: 0; padding: 0 4px; text-align: left; cursor: pointer; }
+.more:hover { color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: var(--cdot); }
+.task.flash { box-shadow: 0 0 0 2px var(--accent); }
+body.pdf-mode .calwrap { overflow: visible; }
+
+.wrap.view-only .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+.wrap.view-only .entry { display: none; }
+.updated { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); font-family: var(--f-data); }
+.saving { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); background: var(--accent); color: var(--accent-ink); padding: 9px 16px; border-radius: 8px; font-size: 14px; z-index: 35; }
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "entry" "main"; }
+  .entry { position: static; }
+}
+@media (max-width: 760px) {
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .kpi-num { font-size: 26px; }
+  .row2 { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap view-only" id="wrap">
+  <header class="top" data-pdf-block="">
+    <div>
+      <p class="eyebrow">Профорієнтація · план роботи</p>
+      <div class="titlerow">
+        <h1>Тижневі завдання</h1>
+        <a class="tasklink" href="index.html" data-no-pdf>Профорієнтація <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="period-line">Тиждень: <strong id="weekText">—</strong></p>
+      <p class="updated" id="updatedText"></p>
+    </div>
+    <div class="tools" data-no-pdf="">
+      <span class="weeknav">
+        <button class="btn icon" id="wPrev" type="button" aria-label="Попередній тиждень">‹</button>
+        <button class="btn" id="wThis" type="button">Цей тиждень</button>
+        <button class="btn icon" id="wNext" type="button" aria-label="Наступний тиждень">›</button>
+      </span>
+      <span class="authbox"><span class="authwho" id="authWho"></span><button class="btn" id="authBtn" type="button" hidden>Увійти</button></span>
+      <button class="btn primary" id="pdfBtn" type="button">Зберегти PDF</button>
+    </div>
+  </header>
+  <p class="status" id="topStatus" role="status" data-no-pdf=""></p>
+
+  <div class="demo" id="demoBanner" hidden="" data-no-pdf="">
+    <span><strong>Приклад.</strong> Ці завдання вигадані й ніде не збережені — так виглядатиме дошка після заповнення.</span>
+    <button class="btn" id="demoOff" type="button">Сховати приклад</button>
+  </div>
+
+  <div class="demo" id="migrate" hidden data-no-pdf>
+    <span>База ще порожня. Перенести <strong id="migrateN"></strong> з попередньої версії на claude.ai?</span>
+    <button class="btn primary" id="migrateBtn" type="button">Перенести</button>
+  </div>
+
+  <section class="kpis" data-pdf-block="" aria-label="Підсумки тижня">
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--accent)"></span>Завдань на тиждень</span><span class="kpi-num" id="n-all">—</span><span class="kpi-sub" id="s-all"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--done)"></span>Виконано</span><span class="kpi-num" id="n-done">—</span><div class="progress" aria-hidden="true"><span id="bar-done"></span></div><span class="kpi-sub" id="s-done"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--doing)"></span>В роботі</span><span class="kpi-num" id="n-doing">—</span><span class="kpi-sub" id="s-doing"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--bad)"></span>Прострочено</span><span class="kpi-num" id="n-late">—</span><span class="kpi-sub" id="s-late"></span></div>
+  </section>
+
+  <div class="layout">
+    <aside class="entry" data-no-pdf="" aria-labelledby="entryTitle">
+      <div class="card">
+        <h2 id="entryTitle">Нове завдання</h2>
+        <p class="readonly" id="readonlyNote" hidden="">Режим перегляду: додавати й змінювати завдання можуть лише учасники з правом редагування.</p>
+        <form id="taskForm" novalidate="">
+          <div class="fields">
+            <div class="field"><label for="f-title">Завдання <span class="req">*</span></label><textarea id="f-title" rows="2" maxlength="300"></textarea></div>
+            <div class="field"><label for="f-person">Відповідальний <span class="req">*</span></label><input type="text" id="f-person" list="dl-person" autocomplete="off" maxlength="80"></div>
+            <div class="field">
+              <label for="f-deadline">Дедлайн <span class="req">*</span></label>
+              <input type="date" id="f-deadline" min="2000-01-01" max="2099-12-31">
+              <div class="quick" aria-label="Швидкий вибір дедлайну">
+                <button class="mini ghost" type="button" data-quick="today">Сьогодні</button>
+                <button class="mini ghost" type="button" data-quick="fri">П’ятниця тижня</button>
+                <button class="mini ghost" type="button" data-quick="sun">Кінець тижня</button>
+              </div>
+            </div>
+            <div class="field"><label for="f-note">Примітка</label><input type="text" id="f-note" maxlength="300"></div>
+          </div>
+          <div class="formfoot">
+            <button class="btn primary" type="submit" id="saveBtn">Додати завдання</button>
+            <button class="btn" type="button" id="cancelEdit" hidden="">Скасувати</button>
+            <span class="formmsg" id="formMsg" role="status"></span>
+          </div>
+        </form>
+        <datalist id="dl-person"></datalist>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="filters" data-no-pdf="">
+        <label for="personFilter">Відповідальний</label>
+        <select id="personFilter"><option value="">Усі</option></select>
+      </div>
+      <section class="card" data-pdf-block="" id="calCard">
+        <div class="cal-head">
+          <div><h2 class="cal-title" id="calTitle">—</h2><p class="cal-sub" id="calSub"></p></div>
+          <div class="weeknav" data-no-pdf="">
+            <button class="btn icon" id="cPrev" type="button" aria-label="Попередній місяць">‹</button>
+            <button class="btn" id="cThis" type="button">Цей місяць</button>
+            <button class="btn icon" id="cNext" type="button" aria-label="Наступний місяць">›</button>
+          </div>
+        </div>
+        <div class="calwrap"><div class="cal" id="cal" role="grid" aria-label="Календар завдань на місяць"></div></div>
+        <div class="legend">
+          <span><i style="--cdot: var(--todo)"></i>Заплановано</span>
+          <span><i style="--cdot: var(--doing)"></i>В роботі</span>
+          <span><i style="--cdot: var(--done)"></i>Виконано</span>
+          <span><i style="--cdot: var(--bad)"></i>Прострочено</span>
+          <span data-no-pdf="">Натисніть на завдання, щоб побачити його картку; на число — щоб відкрити тиждень</span>
+        </div>
+      </section>
+
+      <div class="board" data-pdf-block="" id="board">
+        <section class="col" aria-labelledby="h-todo"><div class="colhead"><h2 id="h-todo"><span class="key" style="--k: var(--todo)"></span>Заплановано</h2><span class="cnt" id="c-todo"></span></div><ul class="cards" id="l-todo"></ul></section>
+        <section class="col" aria-labelledby="h-doing"><div class="colhead"><h2 id="h-doing"><span class="key" style="--k: var(--doing)"></span>В роботі</h2><span class="cnt" id="c-doing"></span></div><ul class="cards" id="l-doing"></ul></section>
+        <section class="col" aria-labelledby="h-done"><div class="colhead"><h2 id="h-done"><span class="key" style="--k: var(--done)"></span>Виконано</h2><span class="cnt" id="c-done"></span></div><ul class="cards" id="l-done"></ul></section>
+      </div>
+
+      <section class="card" data-pdf-block="">
+        <h2>Хто що робить цього тижня</h2>
+        <p class="hint">Завдання з дедлайном на цьому тижні та прострочені з попередніх</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Відповідальний</th><th>Усього</th><th>Виконано</th><th>В роботі</th><th>Заплановано</th><th>Прострочено</th></tr></thead>
+          <tbody id="tb-people"></tbody>
+        </table></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden="" role="status"></div>
+<div class="overlay" id="overlay" hidden="" data-no-pdf="">Готую PDF…</div>
+<div class="saving" id="saving" hidden="" data-no-pdf="" role="status">Зберігаю…</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="fb.js"></script>
+<script type="application/json" id="seed">{"tasks":[{"id":"tmw0d0i3dun45","title":"зателефонувати ліцей малишка домовитися про приїзд","person":"Гарець Т.Ю.","deadline":"2026-11-03","note":"","status":"todo","createdAt":"2026-11-03T07:21:43.321Z","updatedAt":"2026-11-03T10:49:30.893Z","doneAt":null},{"id":"tmw0ilxa73dax","title":"Звести в таблицю всі контакти закладів освіти","person":"Гарець Т.Ю.","deadline":"2026-11-06","note":"Допомагала Штих Г.В.","status":"doing","createdAt":"2026-11-03T09:58:20.863Z","updatedAt":"2026-11-03T09:58:54.183Z","doneAt":null},{"id":"tmw0izxhgo65c","title":"ДВД 19:00","person":"Гарець Т.Ю.","deadline":"2026-11-11","note":"","status":"todo","createdAt":"2026-11-03T10:09:14.308Z"},{"id":"tmw0jb0oyeo43","title":"ДВД 19:00","person":"Гарець Т.Ю.","deadline":"2026-11-25","note":"","status":"todo","createdAt":"2026-11-03T10:17:51.682Z"},{"id":"tmw0jbh5z40i1","title":"ДВД 11:00","person":"Гарець Т.Ю.","deadline":"2026-11-14","note":"","status":"todo","createdAt":"2026-11-03T10:18:13.031Z"},{"id":"tmw0jfy7eqzwk","title":"Форум лідерства","person":"Гарець Т.Ю.","deadline":"2026-11-27","note":"","status":"todo","createdAt":"2026-11-03T10:21:41.738Z"},{"id":"tmw0jyy0emc06","title":"Організація підвищення кваілфікації педагогів","person":"Штих Г.В.","deadline":"2026-11-06","note":"","status":"todo","createdAt":"2026-11-03T10:36:27.950Z"},{"id":"tmw0k2mdj64i2","title":"Зібрати базу контактів директорів шкіл Київського району","person":"Михальченко О.А.","deadline":"2026-11-06","note":"","status":"todo","createdAt":"2026-11-03T10:39:19.495Z","updatedAt":"2026-11-03T10:41:03.545Z"},{"id":"tmw0k6tzpk2e6","title":"Підготувати листи до департаментів освіти із запрошенням на Форум лідерства","person":"Тур Н.В.","deadline":"2026-11-05","note":"","status":"todo","createdAt":"2026-11-03T10:42:35.989Z"},{"id":"tmw0kcdfdp0kc","title":"Документи Приймальна комісія-наказ","person":"Гарець Т.Ю.","deadline":"2026-12-29","note":"","status":"todo","createdAt":"2026-11-03T10:46:54.457Z"},{"id":"tmw0kdrt8k1a4","title":"Оновити буклет Коледж.Додати ГРС","person":"Гарець Т.Ю.","deadline":"2026-11-03","note":"","status":"doing","createdAt":"2026-11-03T10:47:59.756Z","updatedAt":"2026-11-03T10:49:24.817Z","doneAt":null},{"id":"tmw0lqwcmju0b","title":"Таблиця розподілу регіонів","person":"Штих Г.В.","deadline":"2026-11-03","note":"","status":"todo","createdAt":"2026-11-03T11:26:11.782Z"}],"updatedAt":"2026-11-03T11:26:11.791Z"}</script>
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const STATUS = { todo: 'Заплановано', doing: 'В роботі', done: 'Виконано' };
+  const DOW = ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+  const AVA = ['#0F5E73', '#7652A6', '#C2742A', '#4C8738', '#AE4357', '#2F6FB0', '#8A6A1E', '#3B7F7A'];
+
+  let canEdit = false, demo = false, editing = null, saving = false, loaded = false, user = null;
+  let SEED = [];
+  try { const st = JSON.parse(document.getElementById('seed').textContent || '{}'); if (st && Array.isArray(st.tasks)) SEED = st.tasks.filter((t) => t && t.id && typeof t.title === 'string'); } catch (e) {}
+  const STATE = { updatedAt: null };
+  let stored = [];
+  // Save a generated file through the browser
+  const downloads = { save: async ({ filename, data }) => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(data); a.download = filename;
+    document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+    return { status: 'saved' };
+  } };
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  const toD = (s) => new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)));
+  const toS = (d) => d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate());
+  const addDays = (s, n) => { const d = toD(s); d.setUTCDate(d.getUTCDate() + n); return toS(d); };
+  const monday = (s) => { const d = toD(s); d.setUTCDate(d.getUTCDate() - (d.getUTCDay() + 6) % 7); return toS(d); };
+  const fmt = (s) => s.slice(8, 10) + '.' + s.slice(5, 7) + '.' + s.slice(0, 4);
+  const fmtShort = (s) => s.slice(8, 10) + '.' + s.slice(5, 7);
+  const dow = (s) => DOW[toD(s).getUTCDay()];
+  const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return (a === 1 && b !== 11) ? one : (a >= 2 && a <= 4 && (b < 12 || b > 14)) ? few : many; };
+  const uniq = (arr) => [...new Set(arr.filter(Boolean))];
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); }
+  let toastTimer;
+  function toast(t) { const e = $('toast'); e.textContent = t; e.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { e.hidden = true; }, 2600); }
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  const savedWeek = lsGet('tw-week');
+  let week = /^\d{4}-\d{2}-\d{2}$/.test(savedWeek || '') ? monday(savedWeek) : monday(today());
+  let personFilter = '';
+  const MONTHS_UA = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+  const DOW_HEAD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+  const monthOfWeek = (w) => addDays(w, 3).slice(0, 7);
+  const addMonth = (ym, n) => { const i = +ym.slice(0, 4) * 12 + (+ym.slice(5, 7) - 1) + n; return Math.floor(i / 12) + '-' + pad(i % 12 + 1); };
+  let calMonth = monthOfWeek(week);
+
+  function tasks() { return demo ? demoTasks() : stored; }
+  function demoTasks() {
+    const w = monday(today()), p = addDays(w, -7);
+    const rows = [
+      ['Домовитися про візит до ЗОШ №41', 'Мельник', addDays(w, 1), 'done', ''],
+      ['Підготувати презентацію коледжу для 9–11 класів', 'Шевчук', addDays(w, 2), 'doing', 'Оновити фото й спеціальності'],
+      ['Обдзвонити школи Павлограда', 'Коваленко', addDays(w, 3), 'doing', 'Список із 12 шкіл'],
+      ['Розмістити анонс дня відкритих дверей в Instagram', 'Шевчук', addDays(w, 4), 'todo', ''],
+      ['Скласти графік виїздів на листопад', 'Мельник', addDays(w, 4), 'todo', ''],
+      ['Надрукувати буклети для абітурієнтів', 'Коваленко', addDays(p, 4), 'todo', '200 шт.'],
+      ['Звіт з профорієнтації за минулий тиждень', 'Мельник', addDays(p, 4), 'done', '']
+    ];
+    return rows.map((r, i) => ({ id: 'demo' + i, title: r[0], person: r[1], deadline: r[2], status: r[3], note: r[4] }));
+  }
+
+  // Tasks shown for the selected week: deadline in the week; for the current week also unfinished ones from earlier weeks
+  function weekTasks() {
+    const end = addDays(week, 6), isCurrent = week === monday(today());
+    return tasks().filter((t) => (t.deadline >= week && t.deadline <= end) || (isCurrent && t.deadline < week && t.status !== 'done'));
+  }
+  const isLate = (t) => t.status !== 'done' && t.deadline < today();
+
+  function render() {
+    const end = addDays(week, 6), isCurrent = week === monday(today());
+    $('weekText').textContent = fmt(week) + ' – ' + fmt(end) + (isCurrent ? ' (цей тиждень)' : '');
+    $('wThis').disabled = isCurrent;
+    $('demoBanner').hidden = !demo;
+    lsSet('tw-week', week);
+    $('updatedText').textContent = STATE.updatedAt ? 'Оновлено ' + new Date(STATE.updatedAt).toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+    const all = weekTasks();
+
+    const people = uniq(tasks().map((t) => t.person)).sort((a, b) => a.localeCompare(b, 'uk'));
+    const sel = $('personFilter');
+    if (personFilter && !people.includes(personFilter)) personFilter = '';
+    sel.replaceChildren(new Option('Усі', ''), ...people.map((p) => new Option(p, p)));
+    sel.value = personFilter;
+    $('dl-person').replaceChildren(...people.map((p) => { const o = document.createElement('option'); o.value = p; return o; }));
+
+    const shown = personFilter ? all.filter((t) => t.person === personFilter) : all;
+    const done = shown.filter((t) => t.status === 'done').length;
+    const doing = shown.filter((t) => t.status === 'doing').length;
+    const late = shown.filter(isLate).length;
+    $('n-all').textContent = shown.length;
+    $('s-all').textContent = personFilter ? 'відповідальний: ' + personFilter : (uniq(shown.map((t) => t.person)).length + ' ' + plural(uniq(shown.map((t) => t.person)).length, 'відповідальний', 'відповідальні', 'відповідальних'));
+    $('n-done').textContent = done;
+    const pct = shown.length ? Math.round(done / shown.length * 100) : 0;
+    $('bar-done').style.width = pct + '%';
+    $('s-done').textContent = shown.length ? pct + '% від запланованого' : '';
+    $('n-doing').textContent = doing;
+    $('s-doing').textContent = shown.filter((t) => t.status === 'todo').length + ' ще не розпочато';
+    $('n-late').textContent = late;
+    $('s-late').textContent = late ? 'дедлайн минув, не виконано' : 'усе вчасно';
+
+    ['todo', 'doing', 'done'].forEach((st) => {
+      const list = shown.filter((t) => t.status === st).sort((a, b) => a.deadline.localeCompare(b.deadline) || a.title.localeCompare(b.title, 'uk'));
+      $('c-' + st).textContent = list.length;
+      const ul = $('l-' + st); ul.replaceChildren();
+      if (!list.length) ul.append(el('li', 'colempty', st === 'done' ? 'Ще нічого не виконано' : 'Немає завдань'));
+      list.forEach((t) => ul.append(card(t)));
+    });
+    renderPeople(all);
+    renderCal();
+    offerDemo();
+  }
+
+  const ST_DOT = { todo: ['--todo', '--todo-bg'], doing: ['--doing', '--doing-bg'], done: ['--done', '--done-bg'] };
+  function goToWeek(w, focusId) {
+    week = w; render();
+    if (!focusId) return;
+    const c = document.querySelector('.task[data-id="' + focusId + '"]');
+    if (!c) return;
+    try { c.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+    c.classList.add('flash'); setTimeout(() => c.classList.remove('flash'), 1800);
+  }
+  function renderCal() {
+    const y = +calMonth.slice(0, 4), m = +calMonth.slice(5, 7);
+    $('calTitle').textContent = MONTHS_UA[m - 1] + ' ' + y;
+    $('cThis').disabled = calMonth === today().slice(0, 7);
+    const start = monday(calMonth + '-01');
+    const last = toS(new Date(Date.UTC(y, m, 0)));
+    const end = addDays(monday(last), 6);
+    const pool = tasks().filter((t) => !personFilter || t.person === personFilter);
+    const byDay = {};
+    pool.forEach((t) => { if (t.deadline >= start && t.deadline <= end) (byDay[t.deadline] = byDay[t.deadline] || []).push(t); });
+    const inMonth = pool.filter((t) => t.deadline.slice(0, 7) === calMonth);
+    const dn = inMonth.filter((t) => t.status === 'done').length, lt = inMonth.filter(isLate).length;
+    $('calSub').textContent = inMonth.length ? inMonth.length + ' ' + plural(inMonth.length, 'завдання', 'завдання', 'завдань') + ' з дедлайном цього місяця · виконано ' + dn + (lt ? ' · прострочено ' + lt : '') : 'На цей місяць завдань немає';
+    const cal = $('cal'); cal.replaceChildren();
+    DOW_HEAD.forEach((d, i) => cal.append(el('div', 'dow' + (i > 4 ? ' we' : ''), d)));
+    const wEnd = addDays(week, 6), td = today();
+    const order = { todo: 0, doing: 1, done: 2 };
+    for (let d = start; d <= end; d = addDays(d, 1)) {
+      const cell = el('div', 'cd' + (d.slice(0, 7) !== calMonth ? ' out' : '') + (d >= week && d <= wEnd ? ' inweek' : '') + (d === td ? ' today' : ''));
+      cell.setAttribute('role', 'gridcell');
+      const day = d;
+      const n = el('button', 'cd-n', String(+d.slice(8, 10))); n.type = 'button';
+      n.setAttribute('aria-label', fmt(d) + (canEdit ? ': відкрити тиждень і поставити цей дедлайн у формі' : ': відкрити тиждень'));
+      n.addEventListener('click', () => { if (canEdit && !demo) $('f-deadline').value = day; goToWeek(monday(day)); });
+      cell.append(n);
+      const list = (byDay[d] || []).slice().sort((a, b) => (isLate(b) - isLate(a)) || (order[a.status] - order[b.status]) || a.title.localeCompare(b.title, 'uk'));
+      list.slice(0, 3).forEach((t) => {
+        const late = isLate(t);
+        const c = el('button', 'chip' + (t.status === 'done' ? ' done' : '') + (late ? ' late' : '')); c.type = 'button';
+        const col = late ? ['--bad', '--bad-bg'] : ST_DOT[t.status];
+        c.style.setProperty('--cdot', 'var(' + col[0] + ')'); c.style.setProperty('--cbg', 'var(' + col[1] + ')');
+        c.title = t.title + ' — ' + t.person + ', ' + STATUS[t.status].toLowerCase() + (late ? ', прострочено' : '');
+        c.setAttribute('aria-label', c.title);
+        c.append(el('span', 'dot'), el('span', 'ct', t.title));
+        c.addEventListener('click', () => goToWeek(monday(t.deadline), t.id));
+        cell.append(c);
+      });
+      if (list.length > 3) { const more = el('button', 'more', '+' + (list.length - 3) + ' ще'); more.type = 'button'; more.addEventListener('click', () => goToWeek(monday(day))); cell.append(more); }
+      cal.append(cell);
+    }
+  }
+
+  function card(t) {
+    const li = el('li', 'task' + (isLate(t) ? ' overdue' : '') + (t.status === 'done' ? ' done' : ''));
+    li.setAttribute('data-id', t.id);
+    li.append(el('div', 't-title', t.title));
+    if (t.note) li.append(el('div', 't-note', t.note));
+    const meta = el('div', 't-meta');
+    const who = el('span', 'who'); const a = el('span', 'ava', (t.person || '?').trim().charAt(0).toUpperCase());
+    a.style.setProperty('--a', AVA[hash(t.person || '') % AVA.length]); a.setAttribute('aria-hidden', 'true');
+    who.append(a, el('span', null, t.person)); meta.append(who);
+    const due = el('span', 'due' + (isLate(t) ? ' late' : t.deadline === today() && t.status !== 'done' ? ' today' : ''), 'до ' + dow(t.deadline) + ', ' + fmtShort(t.deadline));
+    due.title = isLate(t) ? 'Прострочено' : 'Дедлайн';
+    meta.append(due);
+    if (t.deadline < week && t.status !== 'done') meta.append(el('span', 'carry', 'з минулого тижня'));
+    li.append(meta);
+    if (canEdit && !demo) {
+      const act = el('div', 't-actions'); act.setAttribute('data-no-pdf', '');
+      if (t.status === 'todo') act.append(btn('Почати', 'mini go', () => setStatus(t, 'doing')), btn('Виконано', 'mini', () => setStatus(t, 'done')));
+      if (t.status === 'doing') act.append(btn('Виконано', 'mini go', () => setStatus(t, 'done')), btn('Назад', 'mini', () => setStatus(t, 'todo')));
+      if (t.status === 'done') act.append(btn('Повернути в роботу', 'mini', () => setStatus(t, 'doing')));
+      act.append(btn('Змінити', 'mini ghost', () => startEdit(t)));
+      const del = btn('Видалити', 'mini ghost', () => onDelete(del, t)); act.append(del);
+      li.append(act);
+    }
+    return li;
+  }
+  function btn(text, cls, fn) { const b = el('button', cls, text); b.type = 'button'; b.addEventListener('click', fn); return b; }
+
+  function renderPeople(all) {
+    const tb = $('tb-people'); tb.replaceChildren();
+    const people = uniq(all.map((t) => t.person)).sort((a, b) => a.localeCompare(b, 'uk'));
+    if (!people.length) { const tr = el('tr'); const td = el('td', 'none', 'На цей тиждень завдань немає.'); td.colSpan = 6; tr.append(td); tb.append(tr); return; }
+    people.forEach((p) => {
+      const ts = all.filter((t) => t.person === p);
+      const v = [ts.length, ts.filter((t) => t.status === 'done').length, ts.filter((t) => t.status === 'doing').length, ts.filter((t) => t.status === 'todo').length, ts.filter(isLate).length];
+      const tr = el('tr'); tr.append(el('td', null, p));
+      v.forEach((n, i) => tr.append(el('td', n ? (i === 4 ? 'lateN' : '') : 'zero', String(n))));
+      tb.append(tr);
+    });
+  }
+
+  // ---------- writes: every change republishes the page with the new data ----------
+  // ---------- Firebase: writes go straight to Firestore; every open page updates live ----------
+  const col = () => FB.db.collection('tasks');
+  async function withSaving(fn) {
+    if (!FB.ready || !canEdit) throw { code: 'not_writer' };
+    if (saving) throw { code: 'busy' };
+    saving = true; $('saving').hidden = false;
+    try { await fn(); } finally { saving = false; $('saving').hidden = true; }
+  }
+  function saveError(e) {
+    const c = e && e.code;
+    return c === 'permission-denied' ? 'Цей акаунт не має права змінювати дані. Перевірте email у налаштуваннях.'
+      : c === 'not_writer' ? 'Увійдіть своїм Google-акаунтом (кнопка «Увійти» вгорі), щоб змінювати дані.'
+      : c === 'busy' ? 'Зачекайте, попереднє збереження ще триває.'
+      : c === 'unavailable' ? 'Немає з’єднання з сервером. Перевірте інтернет.'
+      : 'Не вдалося зберегти. Спробуйте ще раз.';
+  }
+  const patchTask = (id, patch) => stored.map((x) => (x.id === id ? Object.assign({}, x, patch) : x));
+  async function setStatus(t, st) {
+    try {
+      await withSaving(() => col().doc(t.id).update({ status: st, updatedAt: new Date().toISOString(), doneAt: st === 'done' ? new Date().toISOString() : null }));
+      if (st === 'done') toast('Виконано: ' + t.title);
+    } catch (e) { toast(saveError(e)); }
+  }
+  async function onDelete(b, t) {
+    if (!b.hasAttribute('data-armed')) {
+      b.setAttribute('data-armed', ''); b.textContent = 'Точно видалити?';
+      setTimeout(() => { if (b.isConnected) { b.removeAttribute('data-armed'); b.textContent = 'Видалити'; } }, 4000);
+      return;
+    }
+    b.disabled = true;
+    try { if (editing === t.id) stopEdit(); await withSaving(() => col().doc(t.id).delete()); toast('Завдання видалено'); }
+    catch (e) { b.disabled = false; toast(saveError(e)); }
+  }
+  function startEdit(t) {
+    editing = t.id;
+    $('f-title').value = t.title; $('f-person').value = t.person; $('f-deadline').value = t.deadline; $('f-note').value = t.note || '';
+    $('entryTitle').textContent = 'Змінити завдання'; $('saveBtn').textContent = 'Зберегти зміни'; $('cancelEdit').hidden = false;
+    $('formMsg').textContent = '';
+    $('f-title').focus();
+    try { $('taskForm').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
+  }
+  function stopEdit() {
+    editing = null;
+    $('entryTitle').textContent = 'Нове завдання'; $('saveBtn').textContent = 'Додати завдання'; $('cancelEdit').hidden = true;
+    $('f-title').value = ''; $('f-note').value = '';
+  }
+  async function onSubmit(e) {
+    e.preventDefault();
+    const msg = $('formMsg'); msg.className = 'formmsg';
+    const err = (t, f) => { msg.textContent = t; msg.className = 'formmsg err'; if (f) $(f).focus(); };
+    if (!canEdit) return err('Увійдіть своїм Google-акаунтом (кнопка «Увійти» вгорі), щоб змінювати завдання.');
+    const title = $('f-title').value.trim(), person = $('f-person').value.trim(), deadline = $('f-deadline').value, note = $('f-note').value.trim();
+    if (!title) return err('Опишіть завдання.', 'f-title');
+    if (!person) return err('Вкажіть відповідального.', 'f-person');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(deadline)) return err('Вкажіть дедлайн.', 'f-deadline');
+    const b = $('saveBtn'); b.disabled = true; msg.textContent = 'Зберігаю…';
+    try {
+      demo = false;
+      if (deadline < week || deadline > addDays(week, 6)) { week = monday(deadline); lsSet('tw-week', week); }
+      if (editing) {
+        const id = editing; stopEdit();
+        await withSaving(() => col().doc(id).update({ title, person, deadline, note, updatedAt: new Date().toISOString() }));
+        toast('Зміни збережено');
+      } else {
+        const t = { id: 't' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title, person, deadline, note, status: 'todo', createdAt: new Date().toISOString() };
+        $('f-title').value = ''; $('f-note').value = '';
+        await withSaving(() => col().doc(t.id).set(t));
+        toast('Завдання додано: ' + person + ', до ' + fmtShort(deadline));
+      }
+      msg.textContent = '';
+    } catch (ex) {
+      err(saveError(ex));
+    } finally { b.disabled = false; }
+  }
+
+  // ---------- PDF ----------
+  async function addCanvas(pdf, canvas, st) {
+    const W = 210, H = 297, M = 12, cw = W - 2 * M; const k = canvas.width / cw; const hMm = canvas.height / k;
+    if (hMm <= H - 2 * M) {
+      if (st.y + hMm > H - M) { pdf.addPage(); st.y = M; }
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', M, st.y, cw, hMm); st.y += hMm + 5; return;
+    }
+    let sy = 0;
+    while (sy < canvas.height - 1) {
+      if (st.y > H - M - 30) { pdf.addPage(); st.y = M; }
+      const sh = Math.min((H - M - st.y) * k, canvas.height - sy);
+      const part = document.createElement('canvas'); part.width = canvas.width; part.height = Math.ceil(sh);
+      const ctx = part.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, part.width, part.height);
+      ctx.drawImage(canvas, 0, sy, canvas.width, sh, 0, 0, canvas.width, sh);
+      pdf.addImage(part.toDataURL('image/jpeg', 0.92), 'JPEG', M, st.y, cw, sh / k); st.y += sh / k + 5; sy += sh;
+    }
+  }
+  async function exportPdf() {
+    const status = $('topStatus');
+    if (!downloads) { status.textContent = 'Збереження файлів недоступне в цьому перегляді.'; return; }
+    if (!window.html2canvas || !window.jspdf) { status.textContent = 'Не завантажились інструменти для PDF. Оновіть сторінку.'; return; }
+    const b = $('pdfBtn'); b.disabled = true; status.textContent = '';
+    const root = document.documentElement; const prev = root.getAttribute('data-theme');
+    $('overlay').hidden = false; let blob = null;
+    try {
+      root.setAttribute('data-theme', 'light'); document.body.classList.add('pdf-mode');
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' }); const st = { y: 12 };
+      for (const blk of document.querySelectorAll('[data-pdf-block]')) {
+        if (blk.hidden) continue;
+        const canvas = await window.html2canvas(blk, { scale: 2, backgroundColor: '#F2F5F4', logging: false, windowWidth: 1100, ignoreElements: (n) => n.hasAttribute && n.hasAttribute('data-no-pdf') });
+        await addCanvas(pdf, canvas, st);
+      }
+      const pages = pdf.getNumberOfPages();
+      for (let i = 1; i <= pages; i++) { pdf.setPage(i); pdf.setFontSize(8); pdf.setTextColor(120); pdf.text(i + ' / ' + pages, 198, 290, { align: 'right' }); }
+      blob = pdf.output('blob');
+    } catch (e) { status.textContent = 'Не вдалося створити PDF. Спробуйте ще раз.'; }
+    finally {
+      if (prev == null) root.removeAttribute('data-theme'); else root.setAttribute('data-theme', prev);
+      document.body.classList.remove('pdf-mode'); $('overlay').hidden = true; b.disabled = false;
+    }
+    if (!blob) return;
+    try { await downloads.save({ filename: 'Завдання_тиждень_' + week + '.pdf', data: blob }); toast('PDF збережено'); }
+    catch (e) {
+      if (e && e.code === 'declined') return;
+      status.textContent = e && e.code === 'rate_limited' ? 'Вікно збереження вже відкрите.' : 'Не вдалося зберегти файл у цьому перегляді.';
+    }
+  }
+
+  // ---------- wiring ----------
+  $('wPrev').addEventListener('click', () => { week = addDays(week, -7); calMonth = monthOfWeek(week); render(); });
+  $('wNext').addEventListener('click', () => { week = addDays(week, 7); calMonth = monthOfWeek(week); render(); });
+  $('wThis').addEventListener('click', () => { week = monday(today()); calMonth = monthOfWeek(week); render(); });
+  $('cPrev').addEventListener('click', () => { calMonth = addMonth(calMonth, -1); renderCal(); });
+  $('cNext').addEventListener('click', () => { calMonth = addMonth(calMonth, 1); renderCal(); });
+  $('cThis').addEventListener('click', () => { calMonth = today().slice(0, 7); renderCal(); });
+  $('personFilter').addEventListener('change', () => { personFilter = $('personFilter').value; render(); });
+  $('demoOff').addEventListener('click', () => { demo = false; render(); offerDemo(); });
+  $('taskForm').addEventListener('submit', onSubmit);
+  $('cancelEdit').addEventListener('click', () => { stopEdit(); $('formMsg').textContent = ''; });
+  $('pdfBtn').addEventListener('click', exportPdf);
+  document.querySelectorAll('[data-quick]').forEach((b) => b.addEventListener('click', () => {
+    const q = b.getAttribute('data-quick');
+    $('f-deadline').value = q === 'today' ? today() : q === 'fri' ? addDays(week, 4) : addDays(week, 6);
+  }));
+
+  function offerDemo() {
+    const ul = $('l-todo');
+    if (stored.length || demo || !canEdit) return;
+    ul.replaceChildren();
+    const li = el('li', 'colempty'); li.append(document.createTextNode('Завдань ще немає. Додайте перше у формі «Нове завдання» або '));
+    const b = btn('подивіться приклад', 'mini', () => { demo = true; render(); }); li.append(b); ul.append(li);
+  }
+
+  $('f-deadline').value = addDays(week, 4) < today() ? today() : addDays(week, 4);
+  render(); offerDemo();
+
+  // ---------- sign-in and live data ----------
+  function setAuthUi() {
+    const b = $('authBtn');
+    b.hidden = !FB.ready;
+    b.textContent = user ? 'Вийти' : 'Увійти';
+    b.title = user ? 'Вийти з акаунта ' + (user.email || '') : 'Увійти, щоб вносити дані';
+    $('authWho').textContent = user ? (canEdit ? user.email : user.email + ' · лише перегляд') : '';
+    $('wrap').classList.toggle('view-only', !canEdit);
+  }
+  function renderMigrate() {
+    const show = canEdit && loaded && !stored.length && SEED.length > 0;
+    $('migrate').hidden = !show;
+    if (show) $('migrateN').textContent = SEED.length + ' ' + plural(SEED.length, 'завдання', 'завдання', 'завдань');
+  }
+  $('migrateBtn').addEventListener('click', async () => {
+    const b = $('migrateBtn'); b.disabled = true; b.textContent = 'Переношу…';
+    try {
+      await withSaving(async () => { const batch = FB.db.batch(); SEED.forEach((r) => batch.set(col().doc(r.id), r)); await batch.commit(); });
+      toast('Дані перенесено');
+    } catch (e) { toast(saveError(e)); b.disabled = false; b.textContent = 'Перенести'; }
+  });
+  $('authBtn').addEventListener('click', async () => {
+    try { if (user) await FB.signOut(); else await FB.signIn(); }
+    catch (e) {
+      const c = e && e.code;
+      if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+      $('topStatus').textContent = c === 'auth/unauthorized-domain' ? 'Цей сайт не додано до дозволених доменів у Firebase (Authentication → Settings → Authorized domains).' : 'Не вдалося увійти: ' + ((e && e.message) || c);
+    }
+  });
+  if (!FB.ready) {
+    $('topStatus').textContent = FB.problem || 'Firebase не налаштовано: заповніть файл firebase-config.js (див. інструкцію).';
+    setAuthUi();
+  } else {
+    $('topStatus').textContent = 'Завантажую дані…';
+    FB.auth.onAuthStateChanged((u) => { user = u; canEdit = FB.isOwner(u); setAuthUi(); render(); renderMigrate(); });
+    col().onSnapshot((snap) => {
+      stored = snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id })).filter((t) => t && typeof t.title === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(t.deadline || '')).map((t) => Object.assign(t, { status: STATUS[t.status] ? t.status : 'todo', person: t.person || '—' }));
+      STATE.updatedAt = stored.reduce((m, r) => { const t = r.updatedAt || r.createdAt || ''; return t > m ? t : m; }, '') || null;
+      loaded = true; if (stored.length) demo = false; $('topStatus').textContent = '';
+      render(); renderMigrate();
+    }, (e) => {
+      $('topStatus').textContent = 'Не вдалося завантажити дані: ' + (e && e.code === 'permission-denied' ? 'перевірте правила Firestore (див. інструкцію).' : ((e && e.message) || ''));
+    });
+  }
+})();
+</script>
+</body>
+</html>

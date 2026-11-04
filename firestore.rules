@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Хто може змінювати дані: впишіть свій email (той самий, що у firebase-config.js).
+    function isOwner() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['stellla754@gmail.com'];
+    }
+
+    // Дашборд профорієнтації: дивитися можуть усі, змінювати — лише власниця.
+    match /records/{id} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+
+    // Тижневі завдання: так само.
+    match /tasks/{id} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+
+    // Усе інше в базі закрито.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

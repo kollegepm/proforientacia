@@ -1,0 +1,930 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!--page-->
+<title>Профорієнтація</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Unbounded:wght@500;700&amp;display=swap">
+<style>
+/* Layout: a report strip (header + six counters) across the top, then the report column with
+   charts and tables, and a sticky entry desk on the right that folds above the report on phones. */
+:root {
+  --paper: #F2F5F4;
+  --panel: #FFFFFF;
+  --ink: #13222A;
+  --muted: #5A6A71;
+  --line: #D6DFDE;
+  --soft: #E8EEED;
+  --accent: #0F5E73;
+  --accent-ink: #FFFFFF;
+  --c-off: #0F5E73;
+  --c-on: #58A6BC;
+  --c-day: #C2742A;
+  --c-book: #4C8738;
+  --c-course: #7652A6;
+  --c-call: #AE4357;
+  --bad: #AE4357;
+  --f-display: 'Unbounded', 'IBM Plex Sans', system-ui, sans-serif;
+  --f-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D161A; --panel: #142128; --ink: #E4EDEF; --muted: #93A4AB; --line: #253740; --soft: #1B2B33;
+    --accent: #5AB2CA; --accent-ink: #0D161A;
+    --c-off: #4FA7C1; --c-on: #9AD2E1; --c-day: #E09A52; --c-book: #7DBA65; --c-course: #A98AD6; --c-call: #E27387; --bad: #E27387;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D161A; --panel: #142128; --ink: #E4EDEF; --muted: #93A4AB; --line: #253740; --soft: #1B2B33;
+  --accent: #5AB2CA; --accent-ink: #0D161A;
+  --c-off: #4FA7C1; --c-on: #9AD2E1; --c-day: #E09A52; --c-book: #7DBA65; --c-course: #A98AD6; --c-call: #E27387; --bad: #E27387;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+.authbox { display: inline-flex; align-items: center; gap: 8px; }
+.authwho { font-size: 12.5px; color: var(--muted); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Header */
+.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; padding-block: 4px 8px; background: var(--paper); }
+.eyebrow { margin: 0 0 6px; font-family: var(--f-data); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(26px, 4vw, 38px); line-height: 1.1; letter-spacing: -.01em; text-wrap: balance; }
+.period-line { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+.period-line strong { color: var(--ink); font-weight: 600; }
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tools label { font-size: 13px; color: var(--muted); }
+.range { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+select, input, textarea { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; min-width: 0; }
+select:focus-visible, input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 6px; padding: 8px 14px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .55; cursor: default; }
+.status { margin: 0; font-size: 13px; color: var(--muted); min-height: 0; }
+.status:empty { display: none; }
+
+.demo { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 10px 14px; border: 1px dashed var(--c-day); border-radius: 8px; background: var(--panel); font-size: 14px; }
+.demo strong { color: var(--c-day); }
+
+/* Counters strip */
+.kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.kpi { background: var(--panel); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); line-height: 1.3; }
+.key { width: 10px; height: 10px; border-radius: 2px; flex: none; background: var(--k); }
+.kpi-num { font-family: var(--f-display); font-weight: 500; font-size: 32px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi-sub { font-size: 12.5px; color: var(--muted); min-height: 1.4em; }
+
+/* Main layout */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; grid-template-areas: "main entry"; gap: 20px; align-items: start; }
+.main { grid-area: main; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.entry { grid-area: entry; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 18px; min-width: 0; }
+.card h2 { margin: 0 0 2px; font-size: 16px; font-weight: 600; text-wrap: balance; }
+.card .hint { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; background: var(--paper); }
+.charts .wide { grid-column: 1 / -1; }
+.chart { position: relative; height: 250px; }
+.chart.tall { height: 280px; }
+.chart canvas { display: block; max-width: 100%; }
+.chart .empty { position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; color: var(--muted); font-size: 14px; background: var(--panel); }
+
+/* Tables */
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 500; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--soft); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.date, td.num { font-family: var(--f-data); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.num, th.num { text-align: right; }
+td.act { width: 1%; text-align: right; white-space: nowrap; }
+td.none { color: var(--muted); text-align: center; padding: 18px 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 2px 8px 2px 6px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.del { font: inherit; font-size: 12.5px; color: var(--muted); background: none; border: 1px solid transparent; border-radius: 5px; padding: 2px 8px; cursor: pointer; }
+.del:hover { color: var(--bad); border-color: var(--line); }
+.del[data-armed] { color: #fff; background: var(--bad); border-color: var(--bad); }
+.cardhead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 10px; }
+.cardhead .total { font-family: var(--f-data); font-size: 13px; color: var(--muted); }
+
+/* Open days */
+.days { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.day { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.day-date { font-family: var(--f-display); font-weight: 500; font-size: 18px; color: var(--c-day); }
+.day-meta { font-size: 13px; color: var(--muted); }
+.day-note { font-size: 14px; overflow-wrap: anywhere; }
+.day-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.days-empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+
+/* Entry desk */
+.entry .card { padding: 18px; }
+.entry h2 { font-size: 17px; margin-bottom: 12px; }
+.kinds { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 0 14px; padding: 0; border: 0; }
+.kinds legend { font-size: 13px; color: var(--muted); margin-bottom: 6px; padding: 0; }
+.kind { position: relative; }
+.kind input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.kind label { display: flex; align-items: center; gap: 8px; font-size: 13.5px; line-height: 1.25; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; cursor: pointer; min-height: 44px; background: var(--panel); }
+.kind label:hover { border-color: var(--muted); }
+.kind input:checked + label { border-color: var(--accent); background: var(--soft); font-weight: 600; }
+.kind input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fields { display: flex; flex-direction: column; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; color: var(--muted); }
+.field label .req { color: var(--bad); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.formfoot { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.formmsg { font-size: 13px; color: var(--muted); }
+.formmsg.err { color: var(--bad); }
+.readonly { font-size: 14px; color: var(--muted); margin: 0; }
+
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 8px; font-size: 14px; z-index: 30; }
+.overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: var(--paper); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); }
+
+/* PDF capture mode: one wide light column */
+body.pdf-mode .wrap { width: 980px; max-width: none; }
+body.pdf-mode .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+body.pdf-mode .entry { display: none; }
+body.pdf-mode .tablewrap { overflow: visible; }
+
+/* Week mode */
+.weeknav { display: inline-flex; align-items: center; gap: 4px; }
+.btn.icon { width: 36px; padding: 8px 0; text-align: center; font-size: 16px; line-height: 1; }
+.kpi-sub b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ledger td, .ledger th { text-align: right; }
+.ledger td:first-child, .ledger th:first-child { text-align: left; }
+.ledger td { font-family: var(--f-data); font-size: 13px; font-variant-numeric: tabular-nums; }
+.ledger td.zero { color: var(--muted); }
+.ledger tr.sel td { background: var(--soft); font-weight: 600; }
+.ledger tr.total td { border-top: 2px solid var(--line); font-weight: 600; font-family: var(--f-body); }
+.ledger tr.total td:not(:first-child) { font-family: var(--f-data); }
+.wk { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); white-space: nowrap; }
+.wk:hover { text-decoration-color: var(--accent); }
+.ledger th .key { display: inline-block; margin-right: 6px; vertical-align: 0; }
+
+.titlerow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.tasklink { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); border-radius: 999px; padding: 5px 14px; background: var(--panel); white-space: nowrap; }
+.tasklink:hover { background: var(--accent); color: var(--accent-ink); }
+.listbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; font-size: 13.5px; color: var(--muted); padding: 2px 2px 0; }
+.listbar strong { color: var(--ink); font-weight: 600; }
+.listbar label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); }
+.listbar input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+tr.inweek td { background: var(--soft); }
+.day.inweek { border-color: var(--c-day); background: var(--soft); }
+.wrap.view-only .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+.wrap.view-only .entry { display: none; }
+.updated { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); font-family: var(--f-data); }
+.saving { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); background: var(--accent); color: var(--accent-ink); padding: 9px 16px; border-radius: 8px; font-size: 14px; z-index: 35; }
+
+@media (max-width: 1060px) {
+  .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "entry" "main"; }
+  .entry { position: static; }
+  body.pdf-mode .kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .charts { grid-template-columns: minmax(0, 1fr); }
+  body.pdf-mode .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi-num { font-size: 26px; }
+  .row2 { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap view-only" id="wrap">
+  <header class="top" data-pdf-block="">
+    <div>
+      <p class="eyebrow">Вступна кампанія <span id="campaign">—</span></p>
+      <div class="titlerow">
+        <h1>Профорієнтація</h1>
+        <a class="tasklink" href="tasks.html" data-no-pdf="">Тижневі завдання <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="updated" id="updatedText"></p>
+      <p class="period-line"><span id="periodKind">Звіт за період</span>: <strong id="periodText">—</strong></p>
+    </div>
+    <div class="tools" data-no-pdf="">
+      <label for="preset">Період</label>
+      <select id="preset">
+        <option value="week">Тиждень</option>
+        <option value="cur">Поточний навчальний рік</option>
+        <option value="prev">Попередній навчальний рік</option>
+        <option value="all">Увесь час</option>
+        <option value="custom">Свій період…</option>
+      </select>
+      <span class="weeknav" id="weekNav" hidden="">
+        <button class="btn icon" id="wPrev" type="button" aria-label="Попередній тиждень">‹</button>
+        <button class="btn" id="wThis" type="button">Цей тиждень</button>
+        <button class="btn icon" id="wNext" type="button" aria-label="Наступний тиждень">›</button>
+      </span>
+      <span class="range" id="customRange" hidden="">
+        <input type="date" id="from" aria-label="Від" min="2000-01-01" max="2099-12-31">
+        <span aria-hidden="true">–</span>
+        <input type="date" id="to" aria-label="До" min="2000-01-01" max="2099-12-31">
+      </span>
+      <span class="authbox"><span class="authwho" id="authWho"></span><button class="btn" id="authBtn" type="button" hidden>Увійти</button></span>
+      <button class="btn primary" id="pdfBtn" type="button">Зберегти PDF</button>
+    </div>
+  </header>
+  <p class="status" id="topStatus" role="status" data-no-pdf=""></p>
+
+  <div class="demo" id="demoBanner" hidden="" data-no-pdf="">
+    <span><strong>Приклад.</strong> Ці дані вигадані й ніде не збережені — так виглядатиме дашборд після заповнення.</span>
+    <button class="btn" id="demoOff" type="button">Сховати приклад</button>
+  </div>
+
+  <div class="demo" id="migrate" hidden data-no-pdf>
+    <span>База ще порожня. Перенести <strong id="migrateN"></strong> з попередньої версії на claude.ai?</span>
+    <button class="btn primary" id="migrateBtn" type="button">Перенести</button>
+  </div>
+
+  <section class="kpis" id="kpis" data-pdf-block="" aria-label="Підсумки за період">
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-off)"></span>Відвідано шкіл очно</span><span class="kpi-num" id="n-off">—</span><span class="kpi-sub" id="s-off"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-on)"></span>Відвідано шкіл онлайн</span><span class="kpi-num" id="n-on">—</span><span class="kpi-sub" id="s-on"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-day)"></span>Днів відкритих дверей</span><span class="kpi-num" id="n-day">—</span><span class="kpi-sub" id="s-day"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-book)"></span>Попередніх бронювань місць</span><span class="kpi-num" id="n-book">—</span><span class="kpi-sub" id="s-book"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-course)"></span>Записаних на курси підготовки</span><span class="kpi-num" id="n-course">—</span><span class="kpi-sub" id="s-course"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-call)"></span>Обзвонів</span><span class="kpi-num" id="n-call">—</span><span class="kpi-sub" id="s-call"></span></div>
+  </section>
+
+  <div class="layout">
+    <aside class="entry" data-no-pdf="" aria-labelledby="entryTitle">
+      <div class="card">
+        <h2 id="entryTitle">Новий запис</h2>
+        <p class="readonly" id="readonlyNote" hidden="">Режим перегляду: додавати записи можуть лише учасники з правом редагування.</p>
+        <form id="entryForm" novalidate="">
+          <fieldset class="kinds" id="kinds">
+            <legend>Що відбулося</legend>
+          </fieldset>
+          <div class="fields">
+            <div class="row2">
+              <div class="field"><label for="f-date">Дата <span class="req">*</span></label><input type="date" id="f-date" min="2000-01-01" max="2099-12-31" required=""></div>
+              <div class="field" data-f="count"><label for="f-count" id="l-count">Кількість</label><input type="number" id="f-count" min="1" step="1" inputmode="numeric"></div>
+            </div>
+            <div class="field" data-f="person"><label for="f-person" id="l-person">Хто</label><input type="text" id="f-person" list="dl-person" autocomplete="off"></div>
+            <div class="row2" data-group="place">
+              <div class="field" data-f="school"><label for="f-school" id="l-school">Школа</label><input type="text" id="f-school" list="dl-school" autocomplete="off"></div>
+              <div class="field" data-f="city"><label for="f-city" id="l-city">Місто</label><input type="text" id="f-city" list="dl-city" autocomplete="off"></div>
+            </div>
+            <div class="field" data-f="spec"><label for="f-spec" id="l-spec">Спеціальність</label><input type="text" id="f-spec" list="dl-spec" autocomplete="off"></div>
+            <div class="field" data-f="note"><label for="f-note" id="l-note">Примітка</label><textarea id="f-note" rows="2"></textarea></div>
+          </div>
+          <div class="formfoot">
+            <button class="btn primary" type="submit" id="saveBtn">Додати запис</button>
+            <span class="formmsg" id="formMsg" role="status"></span>
+          </div>
+        </form>
+        <datalist id="dl-person"></datalist><datalist id="dl-school"></datalist><datalist id="dl-city"></datalist><datalist id="dl-spec"></datalist>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="card" data-pdf-block="" id="sec-weeks">
+        <div class="cardhead"><h2>Щотижневий облік</h2><span class="total" id="t-weeks"></span></div>
+        <p class="hint" id="weeksHint">Підсумки кожного тижня (пн–нд). Натисніть на тиждень, щоб відкрити його звіт.</p>
+        <div class="tablewrap"><table class="ledger">
+          <thead><tr><th>Тиждень</th><th><span class="key" style="--k: var(--c-off)"></span>Очно</th><th><span class="key" style="--k: var(--c-on)"></span>Онлайн</th><th><span class="key" style="--k: var(--c-day)"></span>ДВД</th><th><span class="key" style="--k: var(--c-book)"></span>Бронювання</th><th><span class="key" style="--k: var(--c-course)"></span>Курси</th><th><span class="key" style="--k: var(--c-call)"></span>Обзвони</th></tr></thead>
+          <tbody id="tb-weeks"></tbody>
+        </table></div>
+      </section>
+
+      <div class="charts" data-pdf-block="" id="charts">
+        <section class="card wide" id="card-visits">
+          <h2 id="h-visits">Відвідування шкіл по місяцях</h2>
+          <p class="hint">Кількість шкіл, де провели профорієнтацію очно і онлайн</p>
+          <div class="chart tall"><canvas id="cVisits" aria-label="Графік відвідування шкіл по місяцях" role="img"></canvas><p class="empty" id="e-cVisits" hidden="">Ще немає візитів за цей період</p></div>
+        </section>
+        <section class="card" id="card-recruit">
+          <h2>Бронювання і курси</h2>
+          <p class="hint" id="h-recruit">Попередні бронювання місць і записи на курси підготовки по місяцях</p>
+          <div class="chart"><canvas id="cRecruit" aria-label="Графік бронювань і записів на курси" role="img"></canvas><p class="empty" id="e-cRecruit" hidden="">Ще немає бронювань чи записів</p></div>
+        </section>
+        <section class="card" id="card-callers">
+          <h2>Обзвони за виконавцями</h2>
+          <p class="hint" id="h-callers">Скільки дзвінків зробив кожен за вибраний період</p>
+          <div class="chart"><canvas id="cCallers" aria-label="Графік обзвонів за виконавцями" role="img"></canvas><p class="empty" id="e-cCallers" hidden="">Ще немає обзвонів</p></div>
+        </section>
+        <section class="card wide" id="card-cities">
+          <h2>Охоплення за містами</h2>
+          <p class="hint">Відвідані школи та дзвінки в кожному місті за вибраний період</p>
+          <div class="chart"><canvas id="cCities" aria-label="Графік охоплення за містами" role="img"></canvas><p class="empty" id="e-cCities" hidden="">Ще немає шкіл і міст</p></div>
+        </section>
+      </div>
+
+      <div class="listbar" id="listBar" hidden="">
+        <span>Записи нижче: <strong id="listScope">—</strong></span>
+        <label data-no-pdf=""><input type="checkbox" id="onlyWeek"> Лише вибраний тиждень</label>
+      </div>
+
+      <section class="card" data-pdf-block="" id="sec-days">
+        <div class="cardhead"><h2>Дні відкритих дверей</h2><span class="total" id="t-days"></span></div>
+        <ul class="days" id="daysList"></ul>
+      </section>
+
+      <section class="card" data-pdf-block="" id="sec-visits">
+        <div class="cardhead"><h2>Відвідані школи</h2><span class="total" id="t-visits"></span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Дата</th><th>Формат</th><th>Школа</th><th>Місто</th><th>Хто проводив</th><th data-no-pdf=""></th></tr></thead>
+          <tbody id="tb-visits"></tbody>
+        </table></div>
+      </section>
+
+      <section class="card" data-pdf-block="" id="sec-recruit">
+        <div class="cardhead"><h2>Бронювання місць і записи на курси</h2><span class="total" id="t-recruit"></span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Дата</th><th>Тип</th><th class="num">Кількість</th><th>Спеціальність / курс</th><th>Примітка</th><th data-no-pdf=""></th></tr></thead>
+          <tbody id="tb-recruit"></tbody>
+        </table></div>
+      </section>
+
+      <section class="card" data-pdf-block="" id="sec-calls">
+        <div class="cardhead"><h2>Обзвони</h2><span class="total" id="t-calls"></span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Дата</th><th>Хто телефонував</th><th>Школа</th><th>Місто</th><th class="num">Дзвінків</th><th>Результат</th><th data-no-pdf=""></th></tr></thead>
+          <tbody id="tb-calls"></tbody>
+        </table></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden="" role="status"></div>
+<div class="overlay" id="overlay" hidden="" data-no-pdf="">Готую PDF…</div>
+<div class="saving" id="saving" hidden="" data-no-pdf="" role="status">Зберігаю…</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="fb.js"></script>
+<script type="application/json" id="seed">{"records":[{"id":"rmw0cl97vbkgg","kind":"openday","date":"2026-11-07","createdAt":"2026-11-03T07:09:51.980Z","count":20,"note":"двд для 9 класів"},{"id":"rmw0co7khwmhr","kind":"visit_offline","date":"2026-10-23","createdAt":"2026-11-03T07:12:09.809Z","person":"Фурман М.І., Гарець Т.Ю.","school":"Германівська гімназія","city":"Київська обл"}],"updatedAt":"2026-11-03T07:12:09.871Z"}</script>
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+
+  const KINDS = {
+    visit_offline: { label: 'Школа · очно', color: '--c-off', fields: { school: ['Школа (№ або назва)', 1], city: ['Місто', 1], person: ['Хто проводив', 0], note: ['Примітка', 0] } },
+    visit_online: { label: 'Школа · онлайн', color: '--c-on', fields: { school: ['Школа (№ або назва)', 1], city: ['Місто', 1], person: ['Хто проводив', 0], note: ['Примітка', 0] } },
+    openday: { label: 'День відкритих дверей', color: '--c-day', fields: { count: ['Учасників', 0], note: ['Тема або формат', 0] } },
+    booking: { label: 'Бронювання місця', color: '--c-book', fields: { count: ['Кількість місць', 1], spec: ['Спеціальність', 0], note: ['ПІБ абітурієнта, школа', 0] } },
+    course: { label: 'Запис на курси', color: '--c-course', fields: { count: ['Кількість записаних', 1], spec: ['Курс або група', 0], note: ['Примітка', 0] } },
+    call: { label: 'Обзвін', color: '--c-call', fields: { person: ['Хто телефонував (прізвище)', 1], school: ['Школа (№ або назва)', 1], city: ['Місто', 1], count: ['Кількість дзвінків', 1], note: ['Результат', 0] } }
+  };
+  const FIELD_IDS = ['count', 'person', 'school', 'city', 'spec', 'note'];
+  const MONTHS = ['січ', 'лют', 'бер', 'кві', 'тра', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'гру'];
+
+  let canEdit = false, exporting = false, saving = false, loaded = false, user = null;
+  let SEED = [];
+  try { const st = JSON.parse(document.getElementById('seed').textContent || '{}'); if (st && Array.isArray(st.records)) SEED = st.records.filter((r) => r && r.id && typeof r.date === 'string'); } catch (e) {}
+  const STATE = { updatedAt: null };
+  let stored = [], demo = false;
+  // Save a generated file through the browser
+  const downloads = { save: async ({ filename, data }) => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(data); a.download = filename;
+    document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+    return { status: 'saved' };
+  } };
+  const charts = {};
+
+  // ---------- helpers ----------
+  const pad = (n) => String(n).padStart(2, '0');
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  const fmt = (s) => s ? s.slice(8, 10) + '.' + s.slice(5, 7) + '.' + s.slice(0, 4) : '';
+  const fmtShort = (s) => s.slice(8, 10) + '.' + s.slice(5, 7);
+  const tok = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const num = (r) => Math.max(1, Number(r.count) || 1);
+  const sum = (arr) => arr.reduce((a, r) => a + num(r), 0);
+  const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return (a === 1 && b !== 11) ? one : (a >= 2 && a <= 4 && (b < 12 || b > 14)) ? few : many; };
+  const uniq = (arr) => [...new Set(arr.filter(Boolean))];
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  let toastTimer;
+  function toast(t) { const e = $('toast'); e.textContent = t; e.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { e.hidden = true; }, 2600); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // ---------- dates & period ----------
+  const toD = (s) => new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)));
+  const toS = (d) => d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate());
+  const addDays = (s, n) => { const d = toD(s); d.setUTCDate(d.getUTCDate() + n); return toS(d); };
+  const monday = (s) => { const d = toD(s); d.setUTCDate(d.getUTCDate() - (d.getUTCDay() + 6) % 7); return toS(d); };
+  function acadOf(s) { const y = +s.slice(5, 7) >= 9 ? +s.slice(0, 4) : +s.slice(0, 4) - 1; return { from: y + '-09-01', to: (y + 1) + '-08-31', label: y + '/' + String(y + 1).slice(2) }; }
+  function acad(offset) { const y = +acadOf(today()).from.slice(0, 4) + offset; return { from: y + '-09-01', to: (y + 1) + '-08-31', label: y + '/' + String(y + 1).slice(2) }; }
+  const PRESETS = ['week', 'cur', 'prev', 'all', 'custom'];
+  let savedMode = lsGet('pf-mode'); if (!PRESETS.includes(savedMode)) savedMode = 'week';
+  let savedWeek = lsGet('pf-week'); if (!/^\d{4}-\d{2}-\d{2}$/.test(savedWeek || '')) savedWeek = null;
+  const period = { preset: savedMode, week: savedWeek ? monday(savedWeek) : monday(today()), from: lsGet('pf-from') || acad(0).from, to: lsGet('pf-to') || today() };
+  function range() {
+    if (period.preset === 'week') return { from: period.week, to: addDays(period.week, 6) };
+    if (period.preset === 'cur') return acad(0);
+    if (period.preset === 'prev') return acad(-1);
+    if (period.preset === 'all') return { from: '0000-01-01', to: '9999-12-31' };
+    let f = period.from, t = period.to; if (f > t) [f, t] = [t, f];
+    return { from: f, to: t };
+  }
+  function periodLabel() {
+    const r = range();
+    if (period.preset === 'week') return fmt(r.from) + ' – ' + fmt(r.to) + (period.week === monday(today()) ? ' (цей тиждень)' : '');
+    if (period.preset === 'all') return 'увесь час';
+    if (period.preset === 'custom') return fmt(r.from) + ' – ' + fmt(r.to);
+    return r.label + ' навчальний рік (' + fmt(r.from) + ' – ' + fmt(r.to) + ')';
+  }
+  const KEYS = ['off', 'on', 'day', 'book', 'course', 'call'];
+  function agg(rows) {
+    const a = { off: 0, on: 0, day: 0, book: 0, course: 0, call: 0 };
+    rows.forEach((r) => {
+      if (r.kind === 'visit_offline') a.off++; else if (r.kind === 'visit_online') a.on++; else if (r.kind === 'openday') a.day++;
+      else if (r.kind === 'booking') a.book += num(r); else if (r.kind === 'course') a.course += num(r); else if (r.kind === 'call') a.call += num(r);
+    });
+    return a;
+  }
+  // Weeks (Mon–Sun) covering the ledger: the academic year of the chosen week, or the chosen period
+  function weekSpan() {
+    const isWeek = period.preset === 'week';
+    const r = isWeek ? acadOf(period.week) : range();
+    let from = r.from, to = r.to;
+    const recs = records();
+    if (period.preset === 'all') { const ds = recs.map((x) => x.date).sort(); if (!ds.length) return { weeks: [], from, to }; from = ds[0]; to = ds[ds.length - 1]; }
+    const inR = recs.filter((x) => x.date >= from && x.date <= to).map((x) => x.date).sort();
+    const cap = [today(), inR[inR.length - 1] || '', isWeek ? addDays(period.week, 6) : ''].sort().pop();
+    if (cap < to) to = cap < from ? from : cap;
+    const weeks = []; let w = monday(from);
+    while (w <= to && weeks.length < 120) { weeks.push(w); w = addDays(w, 7); }
+    return { weeks, from, to };
+  }
+  function weekRecords(span, w) { const f = w < span.from ? span.from : w; const e = addDays(w, 6); const t = e > span.to ? span.to : e; return records().filter((x) => x.date >= f && x.date <= t); }
+  function hexA(h, a) { const m = /^#?([0-9a-f]{6})$/i.exec(h); if (!m) return h; const n = parseInt(m[1], 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+
+  // ---------- data ----------
+  function records() { return demo ? demoData() : stored; }
+  function inPeriod() { const r = range(); return records().filter((x) => x.date >= r.from && x.date <= r.to); }
+
+  function demoData() {
+    const y = acad(0).from.slice(0, 4);
+    const rows = [
+      ['visit_offline', y + '-09-17', { school: 'ЗОШ №12', city: 'Дніпро', person: 'Коваленко' }],
+      ['visit_offline', y + '-09-24', { school: 'Ліцей №3', city: 'Кам’янське', person: 'Шевчук' }],
+      ['visit_online', y + '-09-30', { school: 'Гімназія №7', city: 'Нікополь', person: 'Коваленко' }],
+      ['visit_offline', y + '-10-08', { school: 'ЗОШ №41', city: 'Дніпро', person: 'Мельник' }],
+      ['visit_online', y + '-10-10', { school: 'Ліцей №15', city: 'Павлоград', person: 'Шевчук' }],
+      ['visit_online', y + '-10-15', { school: 'ЗОШ №5', city: 'Марганець', person: 'Коваленко' }],
+      ['visit_offline', y + '-10-22', { school: 'Гімназія №2', city: 'Нікополь', person: 'Мельник' }],
+      ['visit_offline', y + '-10-29', { school: 'ЗОШ №9', city: 'Дніпро', person: 'Коваленко' }],
+      ['openday', y + '-10-18', { count: 46, note: 'Знайомство з коледжем, майстер-класи' }],
+      ['openday', y + '-11-15', { count: 0, note: 'Психологія і менеджмент: пробні заняття' }],
+      ['booking', y + '-10-18', { count: 6, spec: 'Психологія', note: 'Після дня відкритих дверей' }],
+      ['booking', y + '-10-27', { count: 3, spec: 'Менеджмент', note: '' }],
+      ['course', y + '-10-01', { count: 8, spec: 'Математика, група 1', note: '' }],
+      ['course', y + '-10-20', { count: 5, spec: 'Українська мова', note: '' }],
+      ['call', y + '-09-12', { person: 'Мельник', school: 'ЗОШ №41', city: 'Дніпро', count: 14, note: 'Домовились про візит' }],
+      ['call', y + '-09-19', { person: 'Шевчук', school: 'Ліцей №15', city: 'Павлоград', count: 9, note: 'Онлайн-зустріч' }],
+      ['call', y + '-10-05', { person: 'Коваленко', school: 'ЗОШ №5', city: 'Марганець', count: 11, note: '' }],
+      ['call', y + '-10-12', { person: 'Мельник', school: 'Гімназія №2', city: 'Нікополь', count: 7, note: 'Запросили на ДВД' }]
+    ];
+    const w = monday(today());
+    rows.push(['visit_offline', w, { school: 'Ліцей №21', city: 'Дніпро', person: 'Шевчук' }]);
+    rows.push(['call', w, { person: 'Коваленко', school: 'ЗОШ №30', city: 'Павлоград', count: 6, note: 'Надіслали запрошення' }]);
+    rows.push(['booking', w, { count: 2, spec: 'Психологія', note: '' }]);
+    return rows.map((r, i) => Object.assign({ id: 'demo' + i, kind: r[0], date: r[1] }, r[2])).filter((r) => r.date <= today() || r.kind === 'openday');
+  }
+
+  // ---------- render ----------
+  function renderAll() {
+    const isWeek = period.preset === 'week';
+    $('campaign').textContent = String(+acad(0).from.slice(0, 4) + 1);
+    $('periodKind').textContent = isWeek ? 'Звіт за тиждень' : 'Звіт за період';
+    $('periodText').textContent = periodLabel();
+    $('demoBanner').hidden = !demo;
+    $('updatedText').textContent = STATE.updatedAt ? 'Дані оновлено ' + new Date(STATE.updatedAt).toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+    const r = range();
+    const rows = inPeriod();
+    const by = (k) => rows.filter((x) => x.kind === k);
+    const off = by('visit_offline'), on = by('visit_online'), days = by('openday'), book = by('booking'), course = by('course'), calls = by('call');
+    const a = agg(rows);
+    let other = null, otherLabel = '';
+    if (isWeek) { const ay = acadOf(period.week); other = agg(records().filter((x) => x.date >= ay.from && x.date <= r.to)); otherLabel = 'з початку ' + ay.label + ' н.р.'; }
+    else { const w = monday(today()), we = addDays(w, 6); if (w <= r.to && we >= r.from) { other = agg(records().filter((x) => x.date >= w && x.date <= we)); otherLabel = 'за цей тиждень'; } }
+    KEYS.forEach((k) => {
+      $('n-' + k).textContent = a[k];
+      const sEl = $('s-' + k); sEl.replaceChildren();
+      if (other) { sEl.append(document.createTextNode(otherLabel + ': ')); sEl.append(el('b', null, String(other[k]))); }
+    });
+    // Lists under the charts: in week mode they show the whole academic year (the chosen week highlighted),
+    // unless "only the chosen week" is ticked
+    const onlyWeek = isWeek && lsGet('pf-only') === '1';
+    const ayL = isWeek ? acadOf(period.week) : null;
+    const listRows = isWeek && !onlyWeek ? records().filter((x) => x.date >= ayL.from && x.date <= ayL.to) : rows;
+    const lby = (k) => listRows.filter((x) => x.kind === k);
+    $('listBar').hidden = !isWeek;
+    $('onlyWeek').checked = onlyWeek;
+    $('listScope').textContent = !isWeek ? '' : onlyWeek ? 'тиждень ' + fmt(period.week) + ' – ' + fmt(addDays(period.week, 6)) : 'увесь ' + ayL.label + ' н.р., записи вибраного тижня виділено';
+    const daysSorted = lby('openday').sort((x, y) => x.date.localeCompare(y.date));
+
+    renderWeeks();
+    renderDays(daysSorted);
+    renderTables(lby('visit_offline').concat(lby('visit_online')), lby('booking').concat(lby('course')), lby('call'));
+    renderCharts();
+    renderSuggestions();
+  }
+
+  function openWeek(w) { period.preset = 'week'; period.week = w; lsSet('pf-mode', 'week'); syncPeriodControls(); renderAll(); }
+  function renderWeeks() {
+    const span = weekSpan(); const tb = $('tb-weeks'); tb.replaceChildren();
+    if (!span.weeks.length) { const tr = el('tr'); const td = el('td', 'none', 'Записів ще немає.'); td.colSpan = 7; tr.append(td); tb.append(tr); $('t-weeks').textContent = ''; return; }
+    const total = agg([]);
+    const list = span.weeks.slice().reverse();
+    list.forEach((w) => {
+      const a = agg(weekRecords(span, w)); KEYS.forEach((k) => { total[k] += a[k]; });
+      const tr = el('tr'); if (period.preset === 'week' && w === period.week) tr.className = 'sel';
+      const td0 = el('td'); const b = el('button', 'wk', fmtShort(w) + ' – ' + fmt(addDays(w, 6))); b.type = 'button';
+      b.setAttribute('aria-label', 'Відкрити звіт за тиждень ' + fmt(w) + ' – ' + fmt(addDays(w, 6)));
+      b.addEventListener('click', () => openWeek(w)); td0.append(b); tr.append(td0);
+      KEYS.forEach((k) => tr.append(el('td', a[k] ? '' : 'zero', String(a[k]))));
+      tb.append(tr);
+    });
+    const tr = el('tr', 'total'); tr.append(el('td', null, 'Разом')); KEYS.forEach((k) => tr.append(el('td', null, String(total[k])))); tb.append(tr);
+    const n = span.weeks.length;
+    $('t-weeks').textContent = (period.preset === 'week' ? acadOf(period.week).label + ' н.р. · ' : '') + n + ' ' + plural(n, 'тиждень', 'тижні', 'тижнів');
+  }
+
+  // ---------- Firebase: writes go straight to Firestore; every open page updates live ----------
+  const col = () => FB.db.collection('records');
+  async function withSaving(fn) {
+    if (!FB.ready || !canEdit) throw { code: 'not_writer' };
+    if (saving) throw { code: 'busy' };
+    saving = true; $('saving').hidden = false;
+    try { await fn(); } finally { saving = false; $('saving').hidden = true; }
+  }
+  function saveError(e) {
+    const c = e && e.code;
+    return c === 'permission-denied' ? 'Цей акаунт не має права змінювати дані. Перевірте email у налаштуваннях.'
+      : c === 'not_writer' ? 'Увійдіть своїм Google-акаунтом (кнопка «Увійти» вгорі), щоб змінювати дані.'
+      : c === 'busy' ? 'Зачекайте, попереднє збереження ще триває.'
+      : c === 'unavailable' ? 'Немає з’єднання з сервером. Перевірте інтернет.'
+      : 'Не вдалося зберегти. Спробуйте ще раз.';
+  }
+
+  const inSel = (r) => period.preset === 'week' && r.date >= period.week && r.date <= addDays(period.week, 6);
+
+  function delButton(r) {
+    if (demo || !canEdit) return null;
+    const b = el('button', 'del', 'Видалити'); b.type = 'button'; b.setAttribute('data-no-pdf', '');
+    b.setAttribute('aria-label', 'Видалити запис від ' + fmt(r.date));
+    b.addEventListener('click', () => onDelete(b, r.id));
+    return b;
+  }
+  async function onDelete(btn, id) {
+    if (!btn.hasAttribute('data-armed')) {
+      btn.setAttribute('data-armed', ''); btn.textContent = 'Точно видалити?';
+      setTimeout(() => { if (btn.isConnected) { btn.removeAttribute('data-armed'); btn.textContent = 'Видалити'; } }, 4000);
+      return;
+    }
+    btn.disabled = true;
+    try { await withSaving(() => col().doc(id).delete()); toast('Запис видалено'); }
+    catch (e) { btn.disabled = false; toast(saveError(e)); }
+  }
+
+  function renderDays(list) {
+    const ul = $('daysList'); ul.replaceChildren();
+    $('t-days').textContent = list.length ? list.length + ' ' + plural(list.length, 'день', 'дні', 'днів') : '';
+    if (!list.length) { const li = el('li', 'days-empty', 'Днів відкритих дверей за цей період ще немає.'); ul.append(li); return; }
+    list.forEach((r) => {
+      const li = el('li', 'day' + (inSel(r) ? ' inweek' : ''));
+      li.append(el('span', 'day-date', fmt(r.date)));
+      const meta = r.date >= today() ? 'заплановано' : (Number(r.count) > 0 ? r.count + ' ' + plural(+r.count, 'учасник', 'учасники', 'учасників') : 'проведено');
+      const foot = el('div', 'day-foot'); foot.append(el('span', 'day-meta', meta));
+      const d = delButton(r); if (d) foot.append(d);
+      li.append(foot);
+      if (r.note) li.append(el('span', 'day-note', r.note));
+      ul.append(li);
+    });
+  }
+
+  function fillTable(tbodyId, rows, cols, emptyText) {
+    const tb = $(tbodyId); tb.replaceChildren();
+    if (!rows.length) { const tr = el('tr'); const td = el('td', 'none', emptyText); td.colSpan = cols.length + 1; tr.append(td); tb.append(tr); return; }
+    rows.forEach((r) => {
+      const tr = el('tr', inSel(r) ? 'inweek' : '');
+      cols.forEach((c) => { const td = el('td', c.cls || ''); const v = c.get(r); if (v instanceof Node) td.append(v); else td.textContent = v == null ? '' : v; tr.append(td); });
+      const act = el('td', 'act'); act.setAttribute('data-no-pdf', ''); const d = delButton(r); if (d) act.append(d); tr.append(act);
+      tb.append(tr);
+    });
+  }
+  function pill(kind) { const p = el('span', 'pill'); const k = el('span', 'key'); k.style.setProperty('--k', 'var(' + KINDS[kind].color + ')'); p.append(k, document.createTextNode(kind === 'visit_offline' ? 'очно' : kind === 'visit_online' ? 'онлайн' : kind === 'booking' ? 'бронювання' : 'курси')); return p; }
+
+  function renderTables(visits, recruit, calls) {
+    const desc = (a, b) => b.date.localeCompare(a.date);
+    visits.sort(desc); recruit.sort(desc); calls.sort(desc);
+    $('t-visits').textContent = visits.length ? visits.length + ' ' + plural(visits.length, 'школа', 'школи', 'шкіл') : '';
+    fillTable('tb-visits', visits, [
+      { cls: 'date', get: (r) => fmt(r.date) }, { get: (r) => pill(r.kind) }, { get: (r) => r.school }, { get: (r) => r.city }, { get: (r) => r.person || '—' }
+    ], 'Візитів до шкіл за цей період ще немає.');
+    $('t-recruit').textContent = recruit.length ? 'бронювань ' + sum(recruit.filter((r) => r.kind === 'booking')) + ' · на курсах ' + sum(recruit.filter((r) => r.kind === 'course')) : '';
+    fillTable('tb-recruit', recruit, [
+      { cls: 'date', get: (r) => fmt(r.date) }, { get: (r) => pill(r.kind) }, { cls: 'num', get: (r) => num(r) }, { get: (r) => r.spec || '—' }, { get: (r) => r.note || '' }
+    ], 'Бронювань і записів на курси за цей період ще немає.');
+    $('t-calls').textContent = calls.length ? sum(calls) + ' ' + plural(sum(calls), 'дзвінок', 'дзвінки', 'дзвінків') : '';
+    fillTable('tb-calls', calls, [
+      { cls: 'date', get: (r) => fmt(r.date) }, { get: (r) => r.person }, { get: (r) => r.school }, { get: (r) => r.city }, { cls: 'num', get: (r) => num(r) }, { get: (r) => r.note || '' }
+    ], 'Обзвонів за цей період ще немає.');
+  }
+
+  function renderSuggestions() {
+    const all = records();
+    const fill = (id, vals) => { const dl = $(id); dl.replaceChildren(...uniq(vals).sort((a, b) => a.localeCompare(b, 'uk')).slice(0, 200).map((v) => { const o = document.createElement('option'); o.value = v; return o; })); };
+    fill('dl-person', all.map((r) => r.person)); fill('dl-school', all.map((r) => r.school)); fill('dl-city', all.map((r) => r.city)); fill('dl-spec', all.map((r) => r.spec));
+  }
+
+  // ---------- charts ----------
+  function months(rows) {
+    const r = range();
+    let from = r.from, to = r.to;
+    const dates = rows.map((x) => x.date).sort();
+    if (period.preset === 'all') { if (!dates.length) return []; from = dates[0]; to = dates[dates.length - 1] > today() ? dates[dates.length - 1] : today(); }
+    else { const cap = [today(), dates[dates.length - 1] || ''].sort().pop(); if (cap < to) to = cap < from ? from : cap; }
+    let y = +from.slice(0, 4), m = +from.slice(5, 7); const ty = +to.slice(0, 4), tm = +to.slice(5, 7); const out = [];
+    while ((y < ty || (y === ty && m <= tm)) && out.length < 36) { out.push(y + '-' + pad(m)); m++; if (m > 12) { m = 1; y++; } }
+    return out;
+  }
+  const mLabel = (ym) => MONTHS[+ym.slice(5, 7) - 1] + ' ' + ym.slice(2, 4);
+
+  function baseOpts(extra) {
+    const muted = tok('--muted'), line = tok('--line');
+    return Object.assign({
+      responsive: true, maintainAspectRatio: false, animation: exporting ? false : { duration: 300 },
+      plugins: {
+        legend: { position: 'bottom', labels: { color: muted, boxWidth: 10, boxHeight: 10, useBorderRadius: true, borderRadius: 2, font: { family: 'IBM Plex Sans', size: 12 } } },
+        tooltip: { backgroundColor: tok('--ink'), titleColor: tok('--paper'), bodyColor: tok('--paper'), titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Sans' }, padding: 10, cornerRadius: 6 }
+      },
+      scales: {
+        x: { ticks: { color: muted, font: { family: 'IBM Plex Sans', size: 12 } }, grid: { display: false }, border: { color: line } },
+        y: { beginAtZero: true, ticks: { color: muted, precision: 0, font: { family: 'IBM Plex Mono', size: 11 } }, grid: { color: line }, border: { display: false } }
+      }
+    }, extra || {});
+  }
+  function draw(id, cfg, hasData) {
+    if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+    $('e-' + id).hidden = hasData;
+    if (!hasData || typeof Chart === 'undefined') return;
+    charts[id] = new Chart($(id), cfg);
+  }
+  function renderCharts() {
+    const rows = inPeriod();
+    const isWeek = period.preset === 'week';
+    let keys, labels, perMonth;
+    if (isWeek) {
+      const span = weekSpan(); keys = span.weeks; labels = keys.map(fmtShort);
+      perMonth = (kind, useCount) => keys.map((w) => { const xs = weekRecords(span, w).filter((x) => x.kind === kind); return useCount ? sum(xs) : xs.length; });
+    } else {
+      keys = months(rows); labels = keys.map(mLabel);
+      perMonth = (kind, useCount) => keys.map((m) => { const xs = rows.filter((x) => x.kind === kind && x.date.slice(0, 7) === m); return useCount ? sum(xs) : xs.length; });
+    }
+    const hl = (c) => isWeek ? keys.map((k) => (k === period.week ? c : hexA(c, 0.3))) : c;
+    $('h-visits').textContent = isWeek ? 'Відвідування шкіл по тижнях' : 'Відвідування шкіл по місяцях';
+    $('h-recruit').textContent = 'Попередні бронювання місць і записи на курси ' + (isWeek ? 'по тижнях' : 'по місяцях');
+
+    const off = perMonth('visit_offline'), on = perMonth('visit_online');
+    draw('cVisits', { type: 'bar', data: { labels, datasets: [
+      { label: 'Очно', data: off, backgroundColor: hl(tok('--c-off')), borderRadius: 3, maxBarThickness: 44 },
+      { label: 'Онлайн', data: on, backgroundColor: hl(tok('--c-on')), borderRadius: 3, maxBarThickness: 44 }
+    ] }, options: baseOpts({ scales: Object.assign(baseOpts().scales, { x: Object.assign(baseOpts().scales.x, { stacked: true }), y: Object.assign(baseOpts().scales.y, { stacked: true }) }) }) }, off.concat(on).some((v) => v > 0));
+
+    const bk = perMonth('booking', true), cr = perMonth('course', true);
+    draw('cRecruit', { type: 'bar', data: { labels, datasets: [
+      { label: 'Бронювання', data: bk, backgroundColor: hl(tok('--c-book')), borderRadius: 3, maxBarThickness: 28 },
+      { label: 'Курси', data: cr, backgroundColor: hl(tok('--c-course')), borderRadius: 3, maxBarThickness: 28 }
+    ] }, options: baseOpts() }, bk.concat(cr).some((v) => v > 0));
+
+    const callers = {}; rows.filter((r) => r.kind === 'call').forEach((r) => { const k = (r.person || '—').trim(); callers[k] = (callers[k] || 0) + num(r); });
+    const ce = Object.entries(callers).sort((a, b) => b[1] - a[1]).slice(0, 12);
+    const hOpts = baseOpts({ indexAxis: 'y', plugins: Object.assign(baseOpts().plugins, { legend: { display: false } }) });
+    hOpts.scales = { x: Object.assign({}, baseOpts().scales.y, { grid: { color: tok('--line') } }), y: Object.assign({}, baseOpts().scales.x, { grid: { display: false } }) };
+    draw('cCallers', { type: 'bar', data: { labels: ce.map((e) => e[0]), datasets: [{ label: 'Дзвінків', data: ce.map((e) => e[1]), backgroundColor: tok('--c-call'), borderRadius: 3, maxBarThickness: 22 }] }, options: hOpts }, ce.length > 0);
+
+    const cities = {};
+    rows.forEach((r) => { if (!r.city || !['visit_offline', 'visit_online', 'call'].includes(r.kind)) return; const k = r.city.trim(); cities[k] = cities[k] || { v: 0, c: 0 }; if (r.kind === 'call') cities[k].c += num(r); else cities[k].v += 1; });
+    const ct = Object.entries(cities).sort((a, b) => (b[1].v + b[1].c) - (a[1].v + a[1].c)).slice(0, 12);
+    draw('cCities', { type: 'bar', data: { labels: ct.map((e) => e[0]), datasets: [
+      { label: 'Відвідані школи', data: ct.map((e) => e[1].v), backgroundColor: tok('--c-off'), borderRadius: 3, maxBarThickness: 28 },
+      { label: 'Дзвінки', data: ct.map((e) => e[1].c), backgroundColor: tok('--c-call'), borderRadius: 3, maxBarThickness: 28 }
+    ] }, options: baseOpts() }, ct.length > 0);
+  }
+
+  // ---------- form ----------
+  let kind = lsGet('pf-kind') || 'visit_offline'; if (!KINDS[kind]) kind = 'visit_offline';
+  function buildKinds() {
+    const fs = $('kinds');
+    Object.keys(KINDS).forEach((k) => {
+      const w = el('div', 'kind');
+      const i = document.createElement('input'); i.type = 'radio'; i.name = 'kind'; i.id = 'k-' + k; i.value = k; i.checked = k === kind;
+      const l = document.createElement('label'); l.htmlFor = i.id; const key = el('span', 'key'); key.style.setProperty('--k', 'var(' + KINDS[k].color + ')'); l.append(key, document.createTextNode(KINDS[k].label));
+      i.addEventListener('change', () => { kind = k; lsSet('pf-kind', k); applyKind(); });
+      w.append(i, l); fs.append(w);
+    });
+  }
+  function applyKind() {
+    const f = KINDS[kind].fields;
+    FIELD_IDS.forEach((id) => {
+      const box = document.querySelector('[data-f="' + id + '"]'); const on = !!f[id];
+      box.hidden = !on;
+      if (on) { const l = $('l-' + id); l.textContent = f[id][0]; if (f[id][1]) { l.append(' '); l.append(el('span', 'req', '*')); } $('f-' + id).required = !!f[id][1]; }
+    });
+    document.querySelector('[data-group="place"]').hidden = !f.school && !f.city;
+    const c = $('f-count'); if (f.count && f.count[1] && !c.value) c.value = 1;
+    if (!f.count) c.value = '';
+    $('formMsg').textContent = ''; $('formMsg').className = 'formmsg';
+  }
+  async function onSubmit(e) {
+    e.preventDefault();
+    const msg = $('formMsg'); msg.className = 'formmsg';
+    if (!canEdit) { msg.textContent = 'Увійдіть своїм Google-акаунтом (кнопка «Увійти» вгорі), щоб додавати записи.'; msg.className = 'formmsg err'; return; }
+    const f = KINDS[kind].fields;
+    const rec = { id: 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), kind, date: $('f-date').value, createdAt: new Date().toISOString() };
+    if (!rec.date || !/^\d{4}-\d{2}-\d{2}$/.test(rec.date)) { msg.textContent = 'Вкажіть дату.'; msg.className = 'formmsg err'; $('f-date').focus(); return; }
+    for (const id of FIELD_IDS) {
+      if (!f[id]) continue;
+      const input = $('f-' + id); let v = input.value.trim();
+      if (id === 'count') {
+        if (v === '') { if (f[id][1]) { msg.textContent = 'Вкажіть: ' + f[id][0].toLowerCase() + '.'; msg.className = 'formmsg err'; input.focus(); return; } continue; }
+        const n = Math.round(Number(v)); if (!(n >= 0) || (f[id][1] && n < 1)) { msg.textContent = 'Кількість має бути цілим числом від 1.'; msg.className = 'formmsg err'; input.focus(); return; }
+        rec.count = n; continue;
+      }
+      if (!v && f[id][1]) { msg.textContent = 'Заповніть поле «' + f[id][0] + '».'; msg.className = 'formmsg err'; input.focus(); return; }
+      if (v) rec[id] = v.slice(0, 300);
+    }
+    const btn = $('saveBtn'); btn.disabled = true; msg.textContent = 'Зберігаю…';
+    try {
+      demo = false;
+      ['school', 'spec', 'note'].forEach((id) => { $('f-' + id).value = ''; });
+      await withSaving(() => col().doc(rec.id).set(rec));
+      if (f.count) $('f-count').value = f.count[1] ? 1 : '';
+      msg.textContent = ''; toast('Запис додано: ' + KINDS[kind].label.toLowerCase() + ', ' + fmt(rec.date));
+      renderAll();
+    } catch (err) {
+      msg.className = 'formmsg err';
+      msg.textContent = saveError(err);
+    } finally { btn.disabled = false; }
+  }
+
+  // ---------- PDF ----------
+  async function addCanvas(pdf, canvas, st) {
+    const W = 210, H = 297, M = 12, cw = W - 2 * M; const pxPerMm = canvas.width / cw; const hMm = canvas.height / pxPerMm;
+    if (hMm <= H - 2 * M) {
+      if (st.y + hMm > H - M) { pdf.addPage(); st.y = M; }
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', M, st.y, cw, hMm); st.y += hMm + 5; return;
+    }
+    let sy = 0;
+    while (sy < canvas.height - 1) {
+      if (st.y > H - M - 30) { pdf.addPage(); st.y = M; }
+      const sh = Math.min((H - M - st.y) * pxPerMm, canvas.height - sy);
+      const part = document.createElement('canvas'); part.width = canvas.width; part.height = Math.ceil(sh);
+      const ctx = part.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, part.width, part.height);
+      ctx.drawImage(canvas, 0, sy, canvas.width, sh, 0, 0, canvas.width, sh);
+      pdf.addImage(part.toDataURL('image/jpeg', 0.92), 'JPEG', M, st.y, cw, sh / pxPerMm); st.y += sh / pxPerMm + 5; sy += sh;
+    }
+  }
+  async function exportPdf() {
+    const status = $('topStatus');
+    if (!downloads) { status.textContent = 'Збереження файлів недоступне в цьому перегляді.'; return; }
+    if (!window.html2canvas || !window.jspdf) { status.textContent = 'Не завантажились інструменти для PDF. Оновіть сторінку.'; return; }
+    const btn = $('pdfBtn'); btn.disabled = true; status.textContent = '';
+    const root = document.documentElement; const prevTheme = root.getAttribute('data-theme');
+    exporting = true; $('overlay').hidden = false;
+    let blob = null;
+    try {
+      root.setAttribute('data-theme', 'light'); document.body.classList.add('pdf-mode');
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      renderCharts();
+      await new Promise((r) => setTimeout(r, 120));
+      const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      const st = { y: 12 };
+      const blocks = Array.from(document.querySelectorAll('[data-pdf-block]')).filter((b) => !b.hidden);
+      for (const b of blocks) {
+        const canvas = await window.html2canvas(b, {
+          scale: 2, backgroundColor: '#F2F5F4', logging: false, windowWidth: 1100,
+          ignoreElements: (n) => n.hasAttribute && (n.hasAttribute('data-no-pdf') || n.id === 'overlay')
+        });
+        await addCanvas(pdf, canvas, st);
+      }
+      const pages = pdf.getNumberOfPages();
+      for (let i = 1; i <= pages; i++) { pdf.setPage(i); pdf.setFontSize(8); pdf.setTextColor(120); pdf.text(i + ' / ' + pages, 198, 290, { align: 'right' }); }
+      blob = pdf.output('blob');
+    } catch (e) {
+      status.textContent = 'Не вдалося створити PDF. Спробуйте ще раз.';
+    } finally {
+      if (prevTheme == null) root.removeAttribute('data-theme'); else root.setAttribute('data-theme', prevTheme);
+      document.body.classList.remove('pdf-mode'); $('overlay').hidden = true; exporting = false;
+      renderCharts(); btn.disabled = false;
+    }
+    if (!blob) return;
+    try {
+      await downloads.save({ filename: period.preset === 'week' ? 'Профорієнтація_тиждень_' + period.week + '.pdf' : 'Профорієнтація_звіт_' + today() + '.pdf', data: blob });
+      status.textContent = '';
+      toast('PDF збережено');
+    } catch (e) {
+      if (e && e.code === 'declined') return;
+      if (e && e.code === 'rate_limited') { status.textContent = 'Вікно збереження вже відкрите.'; return; }
+      status.textContent = 'Не вдалося зберегти файл у цьому перегляді.';
+    }
+  }
+
+  // ---------- wiring ----------
+  function syncPeriodControls() {
+    $('preset').value = period.preset; $('customRange').hidden = period.preset !== 'custom';
+    lsSet('pf-week', period.week);
+    $('weekNav').hidden = period.preset !== 'week'; $('wThis').disabled = period.week === monday(today());
+    if (document.activeElement !== $('from')) $('from').value = period.from;
+    if (document.activeElement !== $('to')) $('to').value = period.to;
+  }
+  $('preset').addEventListener('change', () => { period.preset = $('preset').value; lsSet('pf-mode', period.preset); syncPeriodControls(); renderAll(); });
+  $('wPrev').addEventListener('click', () => { period.week = addDays(period.week, -7); syncPeriodControls(); renderAll(); });
+  $('wNext').addEventListener('click', () => { period.week = addDays(period.week, 7); syncPeriodControls(); renderAll(); });
+  $('wThis').addEventListener('click', () => { period.week = monday(today()); syncPeriodControls(); renderAll(); });
+  ['from', 'to'].forEach((id) => {
+    const inp = $(id);
+    inp.addEventListener('change', () => { if (inp.value && inp.validity.valid) { period[id] = inp.value; lsSet('pf-' + id, inp.value); renderAll(); } });
+    inp.addEventListener('blur', () => { inp.value = period[id]; });
+  });
+  $('pdfBtn').addEventListener('click', exportPdf);
+  $('onlyWeek').addEventListener('change', () => { lsSet('pf-only', $('onlyWeek').checked ? '1' : '0'); renderAll(); });
+  $('demoOff').addEventListener('click', () => { demo = false; renderAll(); });
+  $('entryForm').addEventListener('submit', onSubmit);
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mq.addEventListener) mq.addEventListener('change', () => { if (!exporting) renderCharts(); });
+  new MutationObserver(() => { if (!exporting) renderCharts(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { Object.values(charts).forEach((c) => c.resize()); }, 150); });
+
+  // Empty-state helper inside the visits chart: offer the example
+  function maybeOfferDemo() {
+    const e = $('e-cVisits');
+    if (stored.length || demo || !canEdit) { e.textContent = 'Ще немає візитів за цей період'; return; }
+    e.replaceChildren(document.createTextNode('Даних ще немає. Додайте перший запис у формі «Новий запис» або '));
+    const b = el('button', 'btn', 'подивіться приклад'); b.type = 'button'; b.style.marginLeft = '6px';
+    b.addEventListener('click', () => { demo = true; renderAll(); });
+    e.append(b);
+  }
+
+  buildKinds(); applyKind();
+  $('f-date').value = today();
+  syncPeriodControls();
+  renderAll(); maybeOfferDemo();
+
+  // ---------- sign-in and live data ----------
+  function setAuthUi() {
+    const b = $('authBtn');
+    b.hidden = !FB.ready;
+    b.textContent = user ? 'Вийти' : 'Увійти';
+    b.title = user ? 'Вийти з акаунта ' + (user.email || '') : 'Увійти, щоб вносити дані';
+    $('authWho').textContent = user ? (canEdit ? user.email : user.email + ' · лише перегляд') : '';
+    $('wrap').classList.toggle('view-only', !canEdit);
+  }
+  function renderMigrate() {
+    const show = canEdit && loaded && !stored.length && SEED.length > 0;
+    $('migrate').hidden = !show;
+    if (show) $('migrateN').textContent = SEED.length + ' ' + plural(SEED.length, 'запис', 'записи', 'записів');
+  }
+  $('migrateBtn').addEventListener('click', async () => {
+    const b = $('migrateBtn'); b.disabled = true; b.textContent = 'Переношу…';
+    try {
+      await withSaving(async () => { const batch = FB.db.batch(); SEED.forEach((r) => batch.set(col().doc(r.id), r)); await batch.commit(); });
+      toast('Дані перенесено');
+    } catch (e) { toast(saveError(e)); b.disabled = false; b.textContent = 'Перенести'; }
+  });
+  $('authBtn').addEventListener('click', async () => {
+    try { if (user) await FB.signOut(); else await FB.signIn(); }
+    catch (e) {
+      const c = e && e.code;
+      if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+      $('topStatus').textContent = c === 'auth/unauthorized-domain' ? 'Цей сайт не додано до дозволених доменів у Firebase (Authentication → Settings → Authorized domains).' : 'Не вдалося увійти: ' + ((e && e.message) || c);
+    }
+  });
+  if (!FB.ready) {
+    $('topStatus').textContent = FB.problem || 'Firebase не налаштовано: заповніть файл firebase-config.js (див. інструкцію).';
+    setAuthUi();
+  } else {
+    $('topStatus').textContent = 'Завантажую дані…';
+    FB.auth.onAuthStateChanged((u) => { user = u; canEdit = FB.isOwner(u); setAuthUi(); renderAll(); maybeOfferDemo(); renderMigrate(); });
+    col().onSnapshot((snap) => {
+      stored = snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id })).filter((r) => r && KINDS[r.kind] && typeof r.date === 'string');
+      STATE.updatedAt = stored.reduce((m, r) => { const t = r.updatedAt || r.createdAt || ''; return t > m ? t : m; }, '') || null;
+      loaded = true; if (stored.length) demo = false; $('topStatus').textContent = '';
+      renderAll(); maybeOfferDemo(); renderMigrate();
+    }, (e) => {
+      $('topStatus').textContent = 'Не вдалося завантажити дані: ' + (e && e.code === 'permission-denied' ? 'перевірте правила Firestore (див. інструкцію).' : ((e && e.message) || ''));
+    });
+  }
+})();
+</script>
+</body></html>
