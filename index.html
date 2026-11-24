@@ -19,6 +19,8 @@
   --c-off: #0F5E73;
   --c-on: #58A6BC;
   --c-day: #C2742A;
+  --c-forum: #2F5FA8;
+  --c-inc: #9C7A12;
   --c-book: #4C8738;
   --c-course: #7652A6;
   --c-call: #AE4357;
@@ -31,14 +33,14 @@
   :root:not([data-theme="light"]) {
     --paper: #0D161A; --panel: #142128; --ink: #E4EDEF; --muted: #93A4AB; --line: #253740; --soft: #1B2B33;
     --accent: #5AB2CA; --accent-ink: #0D161A;
-    --c-off: #4FA7C1; --c-on: #9AD2E1; --c-day: #E09A52; --c-book: #7DBA65; --c-course: #A98AD6; --c-call: #E27387; --bad: #E27387;
+    --c-off: #4FA7C1; --c-on: #9AD2E1; --c-day: #E09A52; --c-forum: #7FA6E6; --c-inc: #D9B44A; --c-book: #7DBA65; --c-course: #A98AD6; --c-call: #E27387; --bad: #E27387;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #0D161A; --panel: #142128; --ink: #E4EDEF; --muted: #93A4AB; --line: #253740; --soft: #1B2B33;
   --accent: #5AB2CA; --accent-ink: #0D161A;
-  --c-off: #4FA7C1; --c-on: #9AD2E1; --c-day: #E09A52; --c-book: #7DBA65; --c-course: #A98AD6; --c-call: #E27387; --bad: #E27387;
+  --c-off: #4FA7C1; --c-on: #9AD2E1; --c-day: #E09A52; --c-forum: #7FA6E6; --c-inc: #D9B44A; --c-book: #7DBA65; --c-course: #A98AD6; --c-call: #E27387; --bad: #E27387;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -74,7 +76,7 @@ select:focus-visible, input:focus-visible, textarea:focus-visible, button:focus-
 .demo strong { color: var(--c-day); }
 
 /* Counters strip */
-.kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .kpi { background: var(--panel); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .kpi-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); line-height: 1.3; }
 .key { width: 10px; height: 10px; border-radius: 2px; flex: none; background: var(--k); }
@@ -116,7 +118,9 @@ td.none { color: var(--muted); text-align: center; padding: 18px 10px; }
 /* Open days */
 .days { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .day { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.day-date { font-family: var(--f-display); font-weight: 500; font-size: 18px; color: var(--c-day); }
+.day-date { font-family: var(--f-display); font-weight: 500; font-size: 18px; color: var(--k, var(--c-day)); }
+.day-kind { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.day-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .day-meta { font-size: 13px; color: var(--muted); }
 .day-note { font-size: 14px; overflow-wrap: anywhere; }
 .day-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -175,17 +179,16 @@ body.pdf-mode .tablewrap { overflow: visible; }
 .listbar label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); }
 .listbar input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
 tr.inweek td { background: var(--soft); }
-.day.inweek { border-color: var(--c-day); background: var(--soft); }
+.day.inweek { border-color: var(--k, var(--c-day)); background: var(--soft); }
 .wrap.view-only .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
 .wrap.view-only .entry { display: none; }
 .updated { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); font-family: var(--f-data); }
 .saving { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); background: var(--accent); color: var(--accent-ink); padding: 9px 16px; border-radius: 8px; font-size: 14px; z-index: 35; }
 
 @media (max-width: 1060px) {
-  .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "entry" "main"; }
   .entry { position: static; }
-  body.pdf-mode .kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  body.pdf-mode .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 720px) {
   .charts { grid-template-columns: minmax(0, 1fr); }
@@ -250,7 +253,9 @@ tr.inweek td { background: var(--soft); }
   <section class="kpis" id="kpis" data-pdf-block="" aria-label="Підсумки за період">
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-off)"></span>Відвідано шкіл очно</span><span class="kpi-num" id="n-off">—</span><span class="kpi-sub" id="s-off"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-on)"></span>Відвідано шкіл онлайн</span><span class="kpi-num" id="n-on">—</span><span class="kpi-sub" id="s-on"></span></div>
-    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-day)"></span>Днів відкритих дверей</span><span class="kpi-num" id="n-day">—</span><span class="kpi-sub" id="s-day"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-day)"></span>ДВД (дні відкритих дверей)</span><span class="kpi-num" id="n-day">—</span><span class="kpi-sub" id="s-day"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-forum)"></span>Форуми</span><span class="kpi-num" id="n-forum">—</span><span class="kpi-sub" id="s-forum"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-inc)"></span>Інкубатор</span><span class="kpi-num" id="n-inc">—</span><span class="kpi-sub" id="s-inc"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-book)"></span>Попередніх бронювань місць</span><span class="kpi-num" id="n-book">—</span><span class="kpi-sub" id="s-book"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-course)"></span>Записаних на курси підготовки</span><span class="kpi-num" id="n-course">—</span><span class="kpi-sub" id="s-course"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-call)"></span>Обзвонів</span><span class="kpi-num" id="n-call">—</span><span class="kpi-sub" id="s-call"></span></div>
@@ -292,7 +297,7 @@ tr.inweek td { background: var(--soft); }
         <div class="cardhead"><h2>Щотижневий облік</h2><span class="total" id="t-weeks"></span></div>
         <p class="hint" id="weeksHint">Підсумки кожного тижня (пн–нд). Натисніть на тиждень, щоб відкрити його звіт.</p>
         <div class="tablewrap"><table class="ledger">
-          <thead><tr><th>Тиждень</th><th><span class="key" style="--k: var(--c-off)"></span>Очно</th><th><span class="key" style="--k: var(--c-on)"></span>Онлайн</th><th><span class="key" style="--k: var(--c-day)"></span>ДВД</th><th><span class="key" style="--k: var(--c-book)"></span>Бронювання</th><th><span class="key" style="--k: var(--c-course)"></span>Курси</th><th><span class="key" style="--k: var(--c-call)"></span>Обзвони</th></tr></thead>
+          <thead><tr><th>Тиждень</th><th><span class="key" style="--k: var(--c-off)"></span>Очно</th><th><span class="key" style="--k: var(--c-on)"></span>Онлайн</th><th><span class="key" style="--k: var(--c-day)"></span>ДВД</th><th><span class="key" style="--k: var(--c-forum)"></span>Форум</th><th><span class="key" style="--k: var(--c-inc)"></span>Інкубатор</th><th><span class="key" style="--k: var(--c-book)"></span>Бронювання</th><th><span class="key" style="--k: var(--c-course)"></span>Курси</th><th><span class="key" style="--k: var(--c-call)"></span>Обзвони</th></tr></thead>
           <tbody id="tb-weeks"></tbody>
         </table></div>
       </section>
@@ -326,7 +331,7 @@ tr.inweek td { background: var(--soft); }
       </div>
 
       <section class="card" data-pdf-block="" id="sec-days">
-        <div class="cardhead"><h2>Дні відкритих дверей</h2><span class="total" id="t-days"></span></div>
+        <div class="cardhead"><h2>Заходи: ДВД, Форум, Інкубатор</h2><span class="total" id="t-days"></span></div>
         <ul class="days" id="daysList"></ul>
       </section>
 
@@ -378,7 +383,9 @@ tr.inweek td { background: var(--soft); }
   const KINDS = {
     visit_offline: { label: 'Школа · очно', color: '--c-off', fields: { school: ['Школа (№ або назва)', 1], city: ['Місто', 1], person: ['Хто проводив', 0], note: ['Примітка', 0] } },
     visit_online: { label: 'Школа · онлайн', color: '--c-on', fields: { school: ['Школа (№ або назва)', 1], city: ['Місто', 1], person: ['Хто проводив', 0], note: ['Примітка', 0] } },
-    openday: { label: 'День відкритих дверей', color: '--c-day', fields: { count: ['Учасників', 0], note: ['Тема або формат', 0] } },
+    openday: { label: 'ДВД', color: '--c-day', fields: { count: ['Учасників', 0], note: ['Тема або формат', 0] } },
+    forum: { label: 'Форум', color: '--c-forum', fields: { count: ['Учасників', 0], note: ['Назва або тема форуму', 0] } },
+    incubator: { label: 'Інкубатор', color: '--c-inc', fields: { count: ['Учасників', 0], note: ['Тема заняття або команди', 0] } },
     booking: { label: 'Бронювання місця', color: '--c-book', fields: { count: ['Кількість місць', 1], spec: ['Спеціальність', 0], note: ['ПІБ абітурієнта, школа', 0] } },
     course: { label: 'Запис на курси', color: '--c-course', fields: { count: ['Кількість записаних', 1], spec: ['Курс або група', 0], note: ['Примітка', 0] } },
     call: { label: 'Обзвін', color: '--c-call', fields: { person: ['Хто телефонував (прізвище)', 1], school: ['Школа (№ або назва)', 1], city: ['Місто', 1], count: ['Кількість дзвінків', 1], note: ['Результат', 0] } }
@@ -441,11 +448,11 @@ tr.inweek td { background: var(--soft); }
     if (period.preset === 'custom') return fmt(r.from) + ' – ' + fmt(r.to);
     return r.label + ' навчальний рік (' + fmt(r.from) + ' – ' + fmt(r.to) + ')';
   }
-  const KEYS = ['off', 'on', 'day', 'book', 'course', 'call'];
+  const KEYS = ['off', 'on', 'day', 'forum', 'inc', 'book', 'course', 'call'];
   function agg(rows) {
-    const a = { off: 0, on: 0, day: 0, book: 0, course: 0, call: 0 };
+    const a = { off: 0, on: 0, day: 0, forum: 0, inc: 0, book: 0, course: 0, call: 0 };
     rows.forEach((r) => {
-      if (r.kind === 'visit_offline') a.off++; else if (r.kind === 'visit_online') a.on++; else if (r.kind === 'openday') a.day++;
+      if (r.kind === 'visit_offline') a.off++; else if (r.kind === 'visit_online') a.on++; else if (r.kind === 'openday') a.day++; else if (r.kind === 'forum') a.forum++; else if (r.kind === 'incubator') a.inc++;
       else if (r.kind === 'booking') a.book += num(r); else if (r.kind === 'course') a.course += num(r); else if (r.kind === 'call') a.call += num(r);
     });
     return a;
@@ -484,6 +491,9 @@ tr.inweek td { background: var(--soft); }
       ['visit_offline', y + '-10-29', { school: 'ЗОШ №9', city: 'Дніпро', person: 'Коваленко' }],
       ['openday', y + '-10-18', { count: 46, note: 'Знайомство з коледжем, майстер-класи' }],
       ['openday', y + '-11-15', { count: 0, note: 'Психологія і менеджмент: пробні заняття' }],
+      ['forum', y + '-10-24', { count: 60, note: 'Лідерський форум для 9–11 класів' }],
+      ['incubator', y + '-10-09', { count: 14, note: 'Інкубатор бізнес-ідей Junior, заняття 1' }],
+      ['incubator', y + '-10-23', { count: 12, note: 'Інкубатор бізнес-ідей Junior, заняття 2' }],
       ['booking', y + '-10-18', { count: 6, spec: 'Психологія', note: 'Після дня відкритих дверей' }],
       ['booking', y + '-10-27', { count: 3, spec: 'Менеджмент', note: '' }],
       ['course', y + '-10-01', { count: 8, spec: 'Математика, група 1', note: '' }],
@@ -497,7 +507,7 @@ tr.inweek td { background: var(--soft); }
     rows.push(['visit_offline', w, { school: 'Ліцей №21', city: 'Дніпро', person: 'Шевчук' }]);
     rows.push(['call', w, { person: 'Коваленко', school: 'ЗОШ №30', city: 'Павлоград', count: 6, note: 'Надіслали запрошення' }]);
     rows.push(['booking', w, { count: 2, spec: 'Психологія', note: '' }]);
-    return rows.map((r, i) => Object.assign({ id: 'demo' + i, kind: r[0], date: r[1] }, r[2])).filter((r) => r.date <= today() || r.kind === 'openday');
+    return rows.map((r, i) => Object.assign({ id: 'demo' + i, kind: r[0], date: r[1] }, r[2])).filter((r) => r.date <= today() || r.kind === 'openday' || r.kind === 'forum');
   }
 
   // ---------- render ----------
@@ -530,7 +540,7 @@ tr.inweek td { background: var(--soft); }
     $('listBar').hidden = !isWeek;
     $('onlyWeek').checked = onlyWeek;
     $('listScope').textContent = !isWeek ? '' : onlyWeek ? 'тиждень ' + fmt(period.week) + ' – ' + fmt(addDays(period.week, 6)) : 'увесь ' + ayL.label + ' н.р., записи вибраного тижня виділено';
-    const daysSorted = lby('openday').sort((x, y) => x.date.localeCompare(y.date));
+    const daysSorted = lby('openday').concat(lby('forum'), lby('incubator')).sort((x, y) => x.date.localeCompare(y.date));
 
     renderWeeks();
     renderDays(daysSorted);
@@ -542,7 +552,7 @@ tr.inweek td { background: var(--soft); }
   function openWeek(w) { period.preset = 'week'; period.week = w; lsSet('pf-mode', 'week'); syncPeriodControls(); renderAll(); }
   function renderWeeks() {
     const span = weekSpan(); const tb = $('tb-weeks'); tb.replaceChildren();
-    if (!span.weeks.length) { const tr = el('tr'); const td = el('td', 'none', 'Записів ще немає.'); td.colSpan = 7; tr.append(td); tb.append(tr); $('t-weeks').textContent = ''; return; }
+    if (!span.weeks.length) { const tr = el('tr'); const td = el('td', 'none', 'Записів ще немає.'); td.colSpan = 9; tr.append(td); tb.append(tr); $('t-weeks').textContent = ''; return; }
     const total = agg([]);
     const list = span.weeks.slice().reverse();
     list.forEach((w) => {
@@ -598,11 +608,16 @@ tr.inweek td { background: var(--soft); }
 
   function renderDays(list) {
     const ul = $('daysList'); ul.replaceChildren();
-    $('t-days').textContent = list.length ? list.length + ' ' + plural(list.length, 'день', 'дні', 'днів') : '';
-    if (!list.length) { const li = el('li', 'days-empty', 'Днів відкритих дверей за цей період ще немає.'); ul.append(li); return; }
+    const cnt = (k) => list.filter((r) => r.kind === k).length;
+    $('t-days').textContent = list.length ? 'ДВД ' + cnt('openday') + ' · форум ' + cnt('forum') + ' · інкубатор ' + cnt('incubator') : '';
+    if (!list.length) { const li = el('li', 'days-empty', 'Заходів за цей період ще немає.'); ul.append(li); return; }
     list.forEach((r) => {
       const li = el('li', 'day' + (inSel(r) ? ' inweek' : ''));
-      li.append(el('span', 'day-date', fmt(r.date)));
+      li.style.setProperty('--k', 'var(' + KINDS[r.kind].color + ')');
+      const head = el('div', 'day-head');
+      const kind = el('span', 'day-kind'); const key = el('span', 'key'); kind.append(key, document.createTextNode(KINDS[r.kind].label));
+      head.append(el('span', 'day-date', fmt(r.date)), kind);
+      li.append(head);
       const meta = r.date >= today() ? 'заплановано' : (Number(r.count) > 0 ? r.count + ' ' + plural(+r.count, 'учасник', 'учасники', 'учасників') : 'проведено');
       const foot = el('div', 'day-foot'); foot.append(el('span', 'day-meta', meta));
       const d = delButton(r); if (d) foot.append(d);
