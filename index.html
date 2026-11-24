@@ -138,6 +138,14 @@ td.none { color: var(--muted); text-align: center; padding: 18px 10px; }
 .kind input:checked + label { border-color: var(--accent); background: var(--soft); font-weight: 600; }
 .kind input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
 .fields { display: flex; flex-direction: column; gap: 12px; }
+.evmode { display: flex; flex-direction: column; gap: 6px; margin: -4px 0 14px; }
+.evmode-label { font-size: 13px; color: var(--muted); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; background: var(--panel); }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label { text-align: center; font-size: 13.5px; padding: 9px 8px; cursor: pointer; color: var(--muted); }
+.seg label + input + label { border-left: 1px solid var(--line); }
+.seg input:checked + label { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field label { font-size: 13px; color: var(--muted); }
 .field label .req { color: var(--bad); }
@@ -253,9 +261,9 @@ tr.inweek td { background: var(--soft); }
   <section class="kpis" id="kpis" data-pdf-block="" aria-label="Підсумки за період">
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-off)"></span>Відвідано шкіл очно</span><span class="kpi-num" id="n-off">—</span><span class="kpi-sub" id="s-off"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-on)"></span>Відвідано шкіл онлайн</span><span class="kpi-num" id="n-on">—</span><span class="kpi-sub" id="s-on"></span></div>
-    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-day)"></span>ДВД (дні відкритих дверей)</span><span class="kpi-num" id="n-day">—</span><span class="kpi-sub" id="s-day"></span></div>
-    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-forum)"></span>Форуми</span><span class="kpi-num" id="n-forum">—</span><span class="kpi-sub" id="s-forum"></span></div>
-    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-inc)"></span>Інкубатор</span><span class="kpi-num" id="n-inc">—</span><span class="kpi-sub" id="s-inc"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-day)"></span>Реєстрації на ДВД</span><span class="kpi-num" id="n-day">—</span><span class="kpi-sub" id="s-day"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-forum)"></span>Реєстрації на форум</span><span class="kpi-num" id="n-forum">—</span><span class="kpi-sub" id="s-forum"></span></div>
+    <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-inc)"></span>Реєстрації в інкубатор</span><span class="kpi-num" id="n-inc">—</span><span class="kpi-sub" id="s-inc"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-book)"></span>Попередніх бронювань місць</span><span class="kpi-num" id="n-book">—</span><span class="kpi-sub" id="s-book"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-course)"></span>Записаних на курси підготовки</span><span class="kpi-num" id="n-course">—</span><span class="kpi-sub" id="s-course"></span></div>
     <div class="kpi"><span class="kpi-label"><span class="key" style="--k: var(--c-call)"></span>Обзвонів</span><span class="kpi-num" id="n-call">—</span><span class="kpi-sub" id="s-call"></span></div>
@@ -270,6 +278,13 @@ tr.inweek td { background: var(--soft); }
           <fieldset class="kinds" id="kinds">
             <legend>Що відбулося</legend>
           </fieldset>
+          <div class="evmode" id="evMode" hidden>
+            <span class="evmode-label" id="evModeLabel">Що вносимо</span>
+            <div class="seg" role="radiogroup" aria-labelledby="evModeLabel">
+              <input type="radio" name="evmode" id="m-reg" value="reg"><label for="m-reg">Реєстрації</label>
+              <input type="radio" name="evmode" id="m-held" value="held"><label for="m-held">Захід проведено</label>
+            </div>
+          </div>
           <div class="fields">
             <div class="row2">
               <div class="field"><label for="f-date">Дата <span class="req">*</span></label><input type="date" id="f-date" min="2000-01-01" max="2099-12-31" required=""></div>
@@ -295,7 +310,7 @@ tr.inweek td { background: var(--soft); }
     <main class="main">
       <section class="card" data-pdf-block="" id="sec-weeks">
         <div class="cardhead"><h2>Щотижневий облік</h2><span class="total" id="t-weeks"></span></div>
-        <p class="hint" id="weeksHint">Підсумки кожного тижня (пн–нд). Натисніть на тиждень, щоб відкрити його звіт.</p>
+        <p class="hint" id="weeksHint">Підсумки кожного тижня (пн–нд). У стовпчиках ДВД, Форум та Інкубатор — кількість реєстрацій. Натисніть на тиждень, щоб відкрити його звіт.</p>
         <div class="tablewrap"><table class="ledger">
           <thead><tr><th>Тиждень</th><th><span class="key" style="--k: var(--c-off)"></span>Очно</th><th><span class="key" style="--k: var(--c-on)"></span>Онлайн</th><th><span class="key" style="--k: var(--c-day)"></span>ДВД</th><th><span class="key" style="--k: var(--c-forum)"></span>Форум</th><th><span class="key" style="--k: var(--c-inc)"></span>Інкубатор</th><th><span class="key" style="--k: var(--c-book)"></span>Бронювання</th><th><span class="key" style="--k: var(--c-course)"></span>Курси</th><th><span class="key" style="--k: var(--c-call)"></span>Обзвони</th></tr></thead>
           <tbody id="tb-weeks"></tbody>
@@ -307,6 +322,11 @@ tr.inweek td { background: var(--soft); }
           <h2 id="h-visits">Відвідування шкіл по місяцях</h2>
           <p class="hint">Кількість шкіл, де провели профорієнтацію очно і онлайн</p>
           <div class="chart tall"><canvas id="cVisits" aria-label="Графік відвідування шкіл по місяцях" role="img"></canvas><p class="empty" id="e-cVisits" hidden="">Ще немає візитів за цей період</p></div>
+        </section>
+        <section class="card wide" id="card-reg">
+          <h2 id="h-reg">Реєстрації по тижнях</h2>
+          <p class="hint">Скільки людей зареєструвалося на ДВД, форум та в інкубатор</p>
+          <div class="chart"><canvas id="cReg" aria-label="Графік реєстрацій на ДВД, форум та в інкубатор" role="img"></canvas><p class="empty" id="e-cReg" hidden="">Ще немає реєстрацій за цей період</p></div>
         </section>
         <section class="card" id="card-recruit">
           <h2>Бронювання і курси</h2>
@@ -331,8 +351,16 @@ tr.inweek td { background: var(--soft); }
       </div>
 
       <section class="card" data-pdf-block="" id="sec-days">
-        <div class="cardhead"><h2>Заходи: ДВД, Форум, Інкубатор</h2><span class="total" id="t-days"></span></div>
+        <div class="cardhead"><h2>Проведені заходи: ДВД, Форум, Інкубатор</h2><span class="total" id="t-days"></span></div>
         <ul class="days" id="daysList"></ul>
+      </section>
+
+      <section class="card" data-pdf-block="" id="sec-regs">
+        <div class="cardhead"><h2>Реєстрації: ДВД, Форум, Інкубатор</h2><span class="total" id="t-regs"></span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Дата</th><th>Напрям</th><th class="num">Реєстрацій</th><th>Примітка</th><th data-no-pdf=""></th></tr></thead>
+          <tbody id="tb-regs"></tbody>
+        </table></div>
       </section>
 
       <section class="card" data-pdf-block="" id="sec-visits">
@@ -383,14 +411,18 @@ tr.inweek td { background: var(--soft); }
   const KINDS = {
     visit_offline: { label: 'Школа · очно', color: '--c-off', fields: { school: ['Школа (№ або назва)', 1], city: ['Місто', 1], person: ['Хто проводив', 0], note: ['Примітка', 0] } },
     visit_online: { label: 'Школа · онлайн', color: '--c-on', fields: { school: ['Школа (№ або назва)', 1], city: ['Місто', 1], person: ['Хто проводив', 0], note: ['Примітка', 0] } },
-    openday: { label: 'ДВД', color: '--c-day', fields: { count: ['Учасників', 0], note: ['Тема або формат', 0] } },
-    forum: { label: 'Форум', color: '--c-forum', fields: { count: ['Учасників', 0], note: ['Назва або тема форуму', 0] } },
-    incubator: { label: 'Інкубатор', color: '--c-inc', fields: { count: ['Учасників', 0], note: ['Тема заняття або команди', 0] } },
+    openday: { label: 'ДВД', color: '--c-day', fields: { count: ['Скільки прийшло', 0], note: ['Тема або формат', 0] } },
+    forum: { label: 'Форум', color: '--c-forum', fields: { count: ['Скільки прийшло', 0], note: ['Назва або тема форуму', 0] } },
+    incubator: { label: 'Інкубатор', color: '--c-inc', fields: { count: ['Скільки прийшло', 0], note: ['Тема заняття або команди', 0] } },
+    reg_openday: { label: 'Реєстрації на ДВД', short: 'ДВД', reg: true, color: '--c-day', fields: { count: ['Реєстрацій за день', 1], note: ['Примітка', 0] } },
+    reg_forum: { label: 'Реєстрації на форум', short: 'Форум', reg: true, color: '--c-forum', fields: { count: ['Реєстрацій за день', 1], note: ['Примітка', 0] } },
+    reg_incubator: { label: 'Реєстрації в інкубатор', short: 'Інкубатор', reg: true, color: '--c-inc', fields: { count: ['Реєстрацій за день', 1], note: ['Примітка', 0] } },
     booking: { label: 'Бронювання місця', color: '--c-book', fields: { count: ['Кількість місць', 1], spec: ['Спеціальність', 0], note: ['ПІБ абітурієнта, школа', 0] } },
     course: { label: 'Запис на курси', color: '--c-course', fields: { count: ['Кількість записаних', 1], spec: ['Курс або група', 0], note: ['Примітка', 0] } },
     call: { label: 'Обзвін', color: '--c-call', fields: { person: ['Хто телефонував (прізвище)', 1], school: ['Школа (№ або назва)', 1], city: ['Місто', 1], count: ['Кількість дзвінків', 1], note: ['Результат', 0] } }
   };
   const FIELD_IDS = ['count', 'person', 'school', 'city', 'spec', 'note'];
+  const EVENT_KINDS = ['openday', 'forum', 'incubator'];
   const MONTHS = ['січ', 'лют', 'бер', 'кві', 'тра', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'гру'];
 
   let canEdit = false, exporting = false, saving = false, loaded = false, user = null;
@@ -450,9 +482,10 @@ tr.inweek td { background: var(--soft); }
   }
   const KEYS = ['off', 'on', 'day', 'forum', 'inc', 'book', 'course', 'call'];
   function agg(rows) {
-    const a = { off: 0, on: 0, day: 0, forum: 0, inc: 0, book: 0, course: 0, call: 0 };
+    const a = { off: 0, on: 0, day: 0, forum: 0, inc: 0, book: 0, course: 0, call: 0, dayHeld: 0, forumHeld: 0, incHeld: 0 };
     rows.forEach((r) => {
-      if (r.kind === 'visit_offline') a.off++; else if (r.kind === 'visit_online') a.on++; else if (r.kind === 'openday') a.day++; else if (r.kind === 'forum') a.forum++; else if (r.kind === 'incubator') a.inc++;
+      if (r.kind === 'visit_offline') a.off++; else if (r.kind === 'visit_online') a.on++; else if (r.kind === 'reg_openday') a.day += num(r); else if (r.kind === 'reg_forum') a.forum += num(r); else if (r.kind === 'reg_incubator') a.inc += num(r);
+      else if (r.kind === 'openday') a.dayHeld++; else if (r.kind === 'forum') a.forumHeld++; else if (r.kind === 'incubator') a.incHeld++;
       else if (r.kind === 'booking') a.book += num(r); else if (r.kind === 'course') a.course += num(r); else if (r.kind === 'call') a.call += num(r);
     });
     return a;
@@ -492,6 +525,7 @@ tr.inweek td { background: var(--soft); }
       ['openday', y + '-10-18', { count: 46, note: 'Знайомство з коледжем, майстер-класи' }],
       ['openday', y + '-11-15', { count: 0, note: 'Психологія і менеджмент: пробні заняття' }],
       ['forum', y + '-10-24', { count: 60, note: 'Лідерський форум для 9–11 класів' }],
+      ['reg_openday', y + '-10-06', { count: 4 }], ['reg_openday', y + '-10-13', { count: 9 }], ['reg_forum', y + '-10-14', { count: 7 }], ['reg_forum', y + '-10-20', { count: 12 }], ['reg_incubator', y + '-10-02', { count: 1 }], ['reg_incubator', y + '-10-21', { count: 3 }],
       ['incubator', y + '-10-09', { count: 14, note: 'Інкубатор бізнес-ідей Junior, заняття 1' }],
       ['incubator', y + '-10-23', { count: 12, note: 'Інкубатор бізнес-ідей Junior, заняття 2' }],
       ['booking', y + '-10-18', { count: 6, spec: 'Психологія', note: 'Після дня відкритих дверей' }],
@@ -530,6 +564,7 @@ tr.inweek td { background: var(--soft); }
       $('n-' + k).textContent = a[k];
       const sEl = $('s-' + k); sEl.replaceChildren();
       if (other) { sEl.append(document.createTextNode(otherLabel + ': ')); sEl.append(el('b', null, String(other[k]))); }
+      if (a[k + 'Held'] !== undefined) { sEl.append(document.createTextNode((other ? ' · ' : '') + 'проведено заходів: ')); sEl.append(el('b', null, String(a[k + 'Held']))); }
     });
     // Lists under the charts: in week mode they show the whole academic year (the chosen week highlighted),
     // unless "only the chosen week" is ticked
@@ -544,7 +579,7 @@ tr.inweek td { background: var(--soft); }
 
     renderWeeks();
     renderDays(daysSorted);
-    renderTables(lby('visit_offline').concat(lby('visit_online')), lby('booking').concat(lby('course')), lby('call'));
+    renderTables(lby('visit_offline').concat(lby('visit_online')), lby('booking').concat(lby('course')), lby('call'), lby('reg_openday').concat(lby('reg_forum'), lby('reg_incubator')));
     renderCharts();
     renderSuggestions();
   }
@@ -637,11 +672,17 @@ tr.inweek td { background: var(--soft); }
       tb.append(tr);
     });
   }
-  function pill(kind) { const p = el('span', 'pill'); const k = el('span', 'key'); k.style.setProperty('--k', 'var(' + KINDS[kind].color + ')'); p.append(k, document.createTextNode(kind === 'visit_offline' ? 'очно' : kind === 'visit_online' ? 'онлайн' : kind === 'booking' ? 'бронювання' : 'курси')); return p; }
+  const PILL = { visit_offline: 'очно', visit_online: 'онлайн', booking: 'бронювання', course: 'курси' };
+  function pill(kind) { const p = el('span', 'pill'); const k = el('span', 'key'); k.style.setProperty('--k', 'var(' + KINDS[kind].color + ')'); p.append(k, document.createTextNode(PILL[kind] || KINDS[kind].short || KINDS[kind].label)); return p; }
 
-  function renderTables(visits, recruit, calls) {
+  function renderTables(visits, recruit, calls, regs) {
     const desc = (a, b) => b.date.localeCompare(a.date);
-    visits.sort(desc); recruit.sort(desc); calls.sort(desc);
+    visits.sort(desc); recruit.sort(desc); calls.sort(desc); regs.sort(desc);
+    const rs = (k) => sum(regs.filter((r) => r.kind === k));
+    $('t-regs').textContent = regs.length ? 'ДВД ' + rs('reg_openday') + ' · форум ' + rs('reg_forum') + ' · інкубатор ' + rs('reg_incubator') : '';
+    fillTable('tb-regs', regs, [
+      { cls: 'date', get: (r) => fmt(r.date) }, { get: (r) => pill(r.kind) }, { cls: 'num', get: (r) => num(r) }, { get: (r) => r.note || '' }
+    ], 'Реєстрацій за цей період ще немає.');
     $('t-visits').textContent = visits.length ? visits.length + ' ' + plural(visits.length, 'школа', 'школи', 'шкіл') : '';
     fillTable('tb-visits', visits, [
       { cls: 'date', get: (r) => fmt(r.date) }, { get: (r) => pill(r.kind) }, { get: (r) => r.school }, { get: (r) => r.city }, { get: (r) => r.person || '—' }
@@ -709,6 +750,13 @@ tr.inweek td { background: var(--soft); }
     const hl = (c) => isWeek ? keys.map((k) => (k === period.week ? c : hexA(c, 0.3))) : c;
     $('h-visits').textContent = isWeek ? 'Відвідування шкіл по тижнях' : 'Відвідування шкіл по місяцях';
     $('h-recruit').textContent = 'Попередні бронювання місць і записи на курси ' + (isWeek ? 'по тижнях' : 'по місяцях');
+    $('h-reg').textContent = isWeek ? 'Реєстрації по тижнях' : 'Реєстрації по місяцях';
+    const rgD = perMonth('reg_openday', true), rgF = perMonth('reg_forum', true), rgI = perMonth('reg_incubator', true);
+    draw('cReg', { type: 'bar', data: { labels, datasets: [
+      { label: 'ДВД', data: rgD, backgroundColor: hl(tok('--c-day')), borderRadius: 3, maxBarThickness: 24 },
+      { label: 'Форум', data: rgF, backgroundColor: hl(tok('--c-forum')), borderRadius: 3, maxBarThickness: 24 },
+      { label: 'Інкубатор', data: rgI, backgroundColor: hl(tok('--c-inc')), borderRadius: 3, maxBarThickness: 24 }
+    ] }, options: baseOpts() }, rgD.concat(rgF, rgI).some((v) => v > 0));
 
     const off = perMonth('visit_offline'), on = perMonth('visit_online');
     draw('cVisits', { type: 'bar', data: { labels, datasets: [
@@ -738,10 +786,14 @@ tr.inweek td { background: var(--soft); }
   }
 
   // ---------- form ----------
-  let kind = lsGet('pf-kind') || 'visit_offline'; if (!KINDS[kind]) kind = 'visit_offline';
+  let kind = lsGet('pf-kind') || 'visit_offline'; if (!KINDS[kind] || KINDS[kind].reg) kind = 'visit_offline';
+  let evMode = lsGet('pf-evmode') === 'held' ? 'held' : 'reg';
+  const effKind = () => (EVENT_KINDS.includes(kind) && evMode === 'reg' ? 'reg_' + kind : kind);
+  ['reg', 'held'].forEach((m) => $('m-' + m).addEventListener('change', () => { evMode = m; lsSet('pf-evmode', m); applyKind(); }));
+  $('f-count').addEventListener('input', () => { delete $('f-count').dataset.auto; });
   function buildKinds() {
     const fs = $('kinds');
-    Object.keys(KINDS).forEach((k) => {
+    Object.keys(KINDS).filter((k) => !KINDS[k].reg).forEach((k) => {
       const w = el('div', 'kind');
       const i = document.createElement('input'); i.type = 'radio'; i.name = 'kind'; i.id = 'k-' + k; i.value = k; i.checked = k === kind;
       const l = document.createElement('label'); l.htmlFor = i.id; const key = el('span', 'key'); key.style.setProperty('--k', 'var(' + KINDS[k].color + ')'); l.append(key, document.createTextNode(KINDS[k].label));
@@ -750,23 +802,29 @@ tr.inweek td { background: var(--soft); }
     });
   }
   function applyKind() {
-    const f = KINDS[kind].fields;
+    const isEv = EVENT_KINDS.includes(kind);
+    $('evMode').hidden = !isEv;
+    $('m-reg').checked = evMode === 'reg'; $('m-held').checked = evMode === 'held';
+    const f = KINDS[effKind()].fields;
     FIELD_IDS.forEach((id) => {
       const box = document.querySelector('[data-f="' + id + '"]'); const on = !!f[id];
       box.hidden = !on;
       if (on) { const l = $('l-' + id); l.textContent = f[id][0]; if (f[id][1]) { l.append(' '); l.append(el('span', 'req', '*')); } $('f-' + id).required = !!f[id][1]; }
     });
     document.querySelector('[data-group="place"]').hidden = !f.school && !f.city;
-    const c = $('f-count'); if (f.count && f.count[1] && !c.value) c.value = 1;
-    if (!f.count) c.value = '';
+    const c = $('f-count');
+    if (f.count && f.count[1] && !c.value) { c.value = 1; c.dataset.auto = '1'; }
+    else if (f.count && !f.count[1] && c.dataset.auto === '1') { c.value = ''; delete c.dataset.auto; }
+    if (!f.count) { c.value = ''; delete c.dataset.auto; }
     $('formMsg').textContent = ''; $('formMsg').className = 'formmsg';
   }
   async function onSubmit(e) {
     e.preventDefault();
     const msg = $('formMsg'); msg.className = 'formmsg';
     if (!canEdit) { msg.textContent = 'Увійдіть своїм Google-акаунтом (кнопка «Увійти» вгорі), щоб додавати записи.'; msg.className = 'formmsg err'; return; }
-    const f = KINDS[kind].fields;
-    const rec = { id: 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), kind, date: $('f-date').value, createdAt: new Date().toISOString() };
+    const k = effKind();
+    const f = KINDS[k].fields;
+    const rec = { id: 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), kind: k, date: $('f-date').value, createdAt: new Date().toISOString() };
     if (!rec.date || !/^\d{4}-\d{2}-\d{2}$/.test(rec.date)) { msg.textContent = 'Вкажіть дату.'; msg.className = 'formmsg err'; $('f-date').focus(); return; }
     for (const id of FIELD_IDS) {
       if (!f[id]) continue;
@@ -784,8 +842,8 @@ tr.inweek td { background: var(--soft); }
       demo = false;
       ['school', 'spec', 'note'].forEach((id) => { $('f-' + id).value = ''; });
       await withSaving(() => col().doc(rec.id).set(rec));
-      if (f.count) $('f-count').value = f.count[1] ? 1 : '';
-      msg.textContent = ''; toast('Запис додано: ' + KINDS[kind].label.toLowerCase() + ', ' + fmt(rec.date));
+      if (f.count) { $('f-count').value = f.count[1] ? 1 : ''; if (f.count[1]) $('f-count').dataset.auto = '1'; }
+      msg.textContent = ''; toast('Запис додано: ' + KINDS[k].label.toLowerCase() + ', ' + fmt(rec.date));
       renderAll();
     } catch (err) {
       msg.className = 'formmsg err';
